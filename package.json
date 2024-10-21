@@ -1,25 +1,23 @@
 {
-    "name": "awesome-vscode-extension-boilerplate",
-    "displayName": "Awesome VSCode Extension Boilerplate",
+    "name": "my-folders",
+    "displayName": "my-folders",
     "version": "0.0.29",
-    "description": "An awesome vscode extension boilerplate",
-    "publisher": "YuTengjing",
+    "description": "my-folders",
+    "publisher": "maxisam",
     "private": true,
     "preview": true,
     "author": {
-        "name": "YuTengjing",
-        "email": "ytj2713151713@gmail.com",
-        "url": "https://github.com/tjx666"
+        "name": "maxisam",
+        "url": "https://github.com/maxisam"
     },
     "license": "SEE LICENSE IN LICENSE",
-    "homepage": "https://github.com/tjx666/awesome-vscode-extension-boilerplate/blob/master/README.md",
+    "homepage": "https://github.com/maxisam/my-folders/blob/master/README.md",
     "repository": {
         "type": "git",
-        "url": "https://github.com/tjx666/awesome-vscode-extension-boilerplate"
+        "url": "https://github.com/maxisam/my-folders"
     },
     "bugs": {
-        "url": "https://github.com/tjx666/awesome-vscode-extension-boilerplate/issues",
-        "email": "ytj2713151713@gmail.com"
+        "url": "https://github.com/maxisam/my-folders/issues"
     },
     "keywords": [
         "boilerplate",
@@ -38,14 +36,14 @@
         {
             "url": "https://img.shields.io/badge/PRs-welcome-brightgreen.svg",
             "description": "PRs Welcome",
-            "href": "https://github.com/tjx666/awesome-vscode-extension-boilerplate/fork"
+            "href": "https://github.com/maxisam/my-folders/fork"
         }
     ],
     "activationEvents": [],
     "contributes": {
         "commands": [
             {
-                "command": "awesome-vscode-extension-boilerplate.helloWorld",
+                "command": "my-folders.helloWorld",
                 "title": "Hello World"
             }
         ]
