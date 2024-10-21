@@ -9,7 +9,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     const directoryProvider = new DirectoryProvider(directoryOperator);
 
-    vscode.window.registerTreeDataProvider('explorer-bookmark', directoryProvider);
+    vscode.window.registerTreeDataProvider('my-folders', directoryProvider);
 
     context.subscriptions.push(
         vscode.commands.registerCommand(DirectoryProviderCommands.RefreshEntry, () =>
@@ -26,6 +26,9 @@ export function activate(context: vscode.ExtensionContext) {
         ),
         vscode.commands.registerCommand(DirectoryProviderCommands.RemoveItem, (args) => {
             directoryProvider.removeItem(args.resourceUri);
+        }),
+        vscode.commands.registerCommand(DirectoryProviderCommands.RenameItem, (args) => {
+            directoryProvider.renameItem(args);
         }),
         vscode.commands.registerCommand(DirectoryProviderCommands.CantRemoveItem, () => {
             vscode.window.showInformationMessage(

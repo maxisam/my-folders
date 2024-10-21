@@ -20,8 +20,8 @@ export class DirectoryProvider implements vscode.TreeDataProvider<FileSystemObje
         return await this.directoryOperator.getChildren(element);
     }
 
-    async selectItem(uri: vscode.Uri | undefined) {
-        await this.directoryOperator.selectItem(uri);
+    async selectItem(uri: vscode.Uri | undefined, name?: string | undefined) {
+        await this.directoryOperator.selectItem(uri, name);
         this.refresh();
     }
 
@@ -33,6 +33,19 @@ export class DirectoryProvider implements vscode.TreeDataProvider<FileSystemObje
     removeAllItems() {
         this.directoryOperator.removeAllItems();
         this.refresh();
+    }
+
+    async renameItem(element: FileSystemObject): Promise<void> {
+        const value = await vscode.window.showInputBox({
+            placeHolder: 'New name for bookmark',
+        });
+
+        if (!value) {
+            return;
+        }
+
+        await this.removeItem(element.resourceUri);
+        await this.selectItem(element.resourceUri, value);
     }
 
     refresh(): void {

@@ -9,4 +9,5 @@ export enum DirectoryProviderCommands {
     CantRemoveItem = 'directoryprovider/cantremoveitem',
     RemoveItem = 'directoryprovider/removeitem',
     RemoveAllItems = 'directoryprovider/removeallitems',
+    RenameItem = 'directoryprovider/renameitem',
 }

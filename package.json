@@ -41,12 +41,98 @@
     ],
     "activationEvents": [],
     "contributes": {
+        "viewsWelcome": [
+            {
+                "view": "my-folders",
+                "contents": "Right click and add a file or folder"
+            }
+        ],
+        "views": {
+            "explorer": [
+                {
+                    "id": "my-folders",
+                    "name": "My Folders"
+                }
+            ]
+        },
         "commands": [
             {
-                "command": "my-folders.helloWorld",
-                "title": "Hello World"
+                "command": "directoryprovider/refreshentry",
+                "title": "Refresh",
+                "icon": "$(refresh)"
+            },
+            {
+                "command": "directoryprovider/selectitem",
+                "title": "Add to My Folders"
+            },
+            {
+                "command": "directoryprovider/removeitem",
+                "title": "Remove from My Folders",
+                "icon": "$(close)"
+            },
+            {
+                "command": "directoryprovider/renameitem",
+                "title": "Rename bookmark",
+                "icon": "$(pencil)"
+            },
+            {
+                "command": "directoryprovider/removeallitems",
+                "title": "Remove All Items",
+                "icon": "$(trash)"
+            },
+            {
+                "command": "directoryprovider/cantremoveitemmsg",
+                "title": "Remove from My Folders"
             }
-        ]
+        ],
+        "menus": {
+            "view/title": [
+                {
+                    "command": "directoryprovider/refreshentry",
+                    "when": "view == my-folders",
+                    "group": "navigation"
+                },
+                {
+                    "command": "directoryprovider/removeallitems",
+                    "when": "view == my-folders",
+                    "group": "navigation"
+                }
+            ],
+            "explorer/context": [
+                {
+                    "command": "directoryprovider/selectitem"
+                }
+            ],
+            "view/item/context": [
+                {
+                    "command": "directoryprovider/removeitem",
+                    "when": "view == my-folders && viewItem == directlyBookmarkedDirectory"
+                },
+                {
+                    "command": "directoryprovider/removeitem",
+                    "when": "view == my-folders && viewItem == directlyBookmarkedDirectory",
+                    "group": "inline"
+                },
+                {
+                    "command": "directoryprovider/renameitem",
+                    "when": "view == my-folders && viewItem == directlyBookmarkedDirectory"
+                },
+                {
+                    "command": "directoryprovider/cantremoveitemmsg",
+                    "when": "view == my-folders && viewItem != directlyBookmarkedDirectory"
+                }
+            ]
+        },
+        "configuration": {
+            "title": "My Folders",
+            "properties": {
+                "my-folders.saveWorkspace": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Save the current explorer view when closing VS Code"
+                }
+            }
+        }
     },
     "eslintConfig": {
         "extends": "@yutengjing/eslint-config-typescript",

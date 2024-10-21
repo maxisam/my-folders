@@ -1,5 +1,3 @@
-import * as path from 'path';
-
 import * as vscode from 'vscode';
 
 import { FileSystemObject } from '../types/FileSystemObject';
@@ -7,7 +5,7 @@ import type { TypedDirectory } from '../types/TypedDirectory';
 import { buildTypedDirectory } from '../types/TypedDirectory';
 
 export class DirectoryWorker {
-    readonly vsCodeExtensionConfigurationKey: string = 'explorer-bookmark';
+    readonly vsCodeExtensionConfigurationKey: string = 'my-folders';
     readonly saveWorkspaceConfigurationSettingKey: string = 'saveWorkspace';
     readonly storedBookmarksContextKey: string = 'storedBookmarks';
     readonly bookmarkedDirectoryContextValue: string = 'directlyBookmarkedDirectory';
@@ -32,9 +30,9 @@ export class DirectoryWorker {
         }
     }
 
-    public async selectItem(uri: vscode.Uri | undefined) {
+    public async selectItem(uri: vscode.Uri | undefined, name?: string | undefined) {
         if (uri) {
-            this.bookmarkedDirectories.push(await buildTypedDirectory(uri));
+            this.bookmarkedDirectories.push(await buildTypedDirectory(uri, name));
         }
         this.saveBookmarks();
     }
@@ -80,12 +78,12 @@ export class DirectoryWorker {
         const fileSystem: FileSystemObject[] = [];
 
         for (const dir of bookmarkedDirectories) {
-            const { path: filePath, type: type } = dir;
+            const { path: filePath, type: type, name: folderName } = dir;
             const file = vscode.Uri.file(filePath);
 
             fileSystem.push(
                 new FileSystemObject(
-                    `${path.basename(dir.path)}`,
+                    `${folderName}`,
                     type === vscode.FileType.File
                         ? vscode.TreeItemCollapsibleState.None
                         : vscode.TreeItemCollapsibleState.Collapsed,
