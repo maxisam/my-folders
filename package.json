@@ -81,7 +81,7 @@
                 "icon": "$(trash)"
             },
             {
-                "command": "directoryprovider/cantremoveitemmsg",
+                "command": "directoryprovider/cantremoveitem",
                 "title": "Remove from My Folders"
             }
         ],
@@ -118,7 +118,7 @@
                     "when": "view == my-folders && viewItem == directlyBookmarkedDirectory"
                 },
                 {
-                    "command": "directoryprovider/cantremoveitemmsg",
+                    "command": "directoryprovider/cantremoveitem",
                     "when": "view == my-folders && viewItem != directlyBookmarkedDirectory"
                 }
             ]
