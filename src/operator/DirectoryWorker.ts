@@ -33,6 +33,8 @@ export class DirectoryWorker {
     public async selectItem(uri: vscode.Uri | undefined, name?: string | undefined) {
         if (uri) {
             this.bookmarkedDirectories.push(await buildTypedDirectory(uri, name));
+            // sort the bookmarks by name
+            this.bookmarkedDirectories.sort((a, b) => a.name.localeCompare(b.name));
         }
         this.saveBookmarks();
     }
