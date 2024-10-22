@@ -1,0 +1,60 @@
+name: ♨️ Publish
+
+permissions:
+  contents: write
+
+on:
+# on tag push
+  push:
+    tags: 
+      - "v[0-9]+"
+      - "v[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+-*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get tag from the event
+        id: get-tag
+        run: |
+          echo "GIT_TAG=${{github.ref_name}}" >> $GITHUB_OUTPUT
+          echo "::notice title=🏷️ Tag::${{ github.ref_name }} @ ${{ github.sha}}"
+
+      - name: Check package.json version is the same as the tag
+        id: check-version
+        run: |
+          if [ "v$(jq -r .version package.json)" != "${{ steps.get-tag.outputs.GIT_TAG }}" ]; then
+            echo "Version in package.json does not match the tag"
+            exit 1
+          fi
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Publish to Visual Studio Marketplace
+        run: pnpm run publish:vs-marketplace
+        env:
+          VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+
+      # - name: Publish to Open VSX Registry
+      #   run: pnpm run publish:open-vsx -p ${{ secrets.OPEN_VSX_TOKEN }}
+
+      - name: Github Release
+        run: npx changelogithub
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

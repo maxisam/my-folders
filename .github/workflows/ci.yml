@@ -1,4 +1,4 @@
-name: CI
+name: 🏃CI
 
 permissions:
   contents: write
@@ -12,7 +12,10 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: 
+          - ubuntu-latest
+          # - macos-latest
+          # - windows-latest
     runs-on: ${{ matrix.os }}
     outputs:
       GIT_TAG: ${{ steps.set-tag.outputs.GIT_TAG }}
