@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { DirectoryProviderCommands } from '../commands/CrudCommands';
+import { ExtensionCommands } from '../commands/CrudCommands';
 
 export class FileSystemObject extends vscode.TreeItem {
     resourceUri: vscode.Uri;
@@ -18,7 +18,7 @@ export class FileSystemObject extends vscode.TreeItem {
             collapsibleState === vscode.TreeItemCollapsibleState.None
                 ? {
                       arguments: [this],
-                      command: DirectoryProviderCommands.OpenItem,
+                      command: ExtensionCommands.OpenItem,
                       title: this.label,
                   }
                 : undefined;

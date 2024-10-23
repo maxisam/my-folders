@@ -57,68 +57,68 @@
         },
         "commands": [
             {
-                "command": "directoryprovider/refreshentry",
+                "command": "my-folders.refreshEntry",
                 "title": "Refresh",
                 "icon": "$(refresh)"
             },
             {
-                "command": "directoryprovider/selectitem",
+                "command": "my-folders.selectItem",
                 "title": "Add to My Folders"
             },
             {
-                "command": "directoryprovider/removeitem",
+                "command": "my-folders.removeItem",
                 "title": "Remove from My Folders",
                 "icon": "$(close)"
             },
             {
-                "command": "directoryprovider/renameitem",
+                "command": "my-folders.renameItem",
                 "title": "Rename bookmark",
                 "icon": "$(pencil)"
             },
             {
-                "command": "directoryprovider/removeallitems",
+                "command": "my-folders.removeAllItems",
                 "title": "Remove All Items",
                 "icon": "$(trash)"
             },
             {
-                "command": "directoryprovider/cantremoveitem",
+                "command": "my-folders.cantRemoveItem",
                 "title": "Remove from My Folders"
             }
         ],
         "menus": {
             "view/title": [
                 {
-                    "command": "directoryprovider/refreshentry",
+                    "command": "my-folders.refreshEntry",
                     "when": "view == my-folders",
                     "group": "navigation"
                 },
                 {
-                    "command": "directoryprovider/removeallitems",
+                    "command": "my-folders.removeAllItems",
                     "when": "view == my-folders",
                     "group": "navigation"
                 }
             ],
             "explorer/context": [
                 {
-                    "command": "directoryprovider/selectitem"
+                    "command": "my-folders.selectItem"
                 }
             ],
             "view/item/context": [
                 {
-                    "command": "directoryprovider/removeitem",
+                    "command": "my-folders.removeItem",
                     "when": "view == my-folders && viewItem == directlyBookmarkedDirectory"
                 },
                 {
-                    "command": "directoryprovider/removeitem",
+                    "command": "my-folders.removeItem",
                     "when": "view == my-folders && viewItem == directlyBookmarkedDirectory",
                     "group": "inline"
                 },
                 {
-                    "command": "directoryprovider/renameitem",
+                    "command": "my-folders.renameItem",
                     "when": "view == my-folders && viewItem == directlyBookmarkedDirectory"
                 },
                 {
-                    "command": "directoryprovider/cantremoveitem",
+                    "command": "my-folders.cantRemoveItem",
                     "when": "view == my-folders && viewItem != directlyBookmarkedDirectory"
                 }
             ]
