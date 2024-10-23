@@ -10,18 +10,32 @@ export class FileSystemObject extends vscode.TreeItem {
         public readonly label: string,
         public readonly collapsibleState: vscode.TreeItemCollapsibleState,
         uri: vscode.Uri,
+        private hideContent: boolean,
     ) {
         super(label, collapsibleState);
         this.tooltip = uri.fsPath;
         this.resourceUri = uri;
-        this.command =
-            collapsibleState === vscode.TreeItemCollapsibleState.None
-                ? {
-                      arguments: [this],
-                      command: ExtensionCommands.OpenItem,
-                      title: this.label,
-                  }
-                : undefined;
+        this.command = this.createCommand(collapsibleState);
+    }
+
+    private createCommand(collapsibleState: vscode.TreeItemCollapsibleState) {
+        // If the item is a file, return a command to open the file
+        if (collapsibleState === vscode.TreeItemCollapsibleState.None) {
+            return {
+                arguments: [this],
+                command: ExtensionCommands.OpenItem,
+                title: this.label,
+            };
+        }
+        if (!this.hideContent) {
+            return;
+        } else {
+            return {
+                arguments: [this.resourceUri],
+                command: 'revealInExplorer',
+                title: this.label,
+            };
+        }
     }
 
     setContextValue(value: string) {

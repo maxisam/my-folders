@@ -1,12 +1,19 @@
 import * as vscode from 'vscode';
 
+import { MY_FOLDER_DIRECTORY_CONTEXT } from '../constants';
 import type { IConfiguration } from '../types/Configuration';
-import { FileSystemObject } from '../types/FileSystemObject';
+import type { FileSystemObject } from '../types/FileSystemObject';
 import type { TypedDirectory } from '../types/TypedDirectory';
-import { buildTypedDirectory, getConfigurationAsync, updateConfigurationAsync } from '../utils';
+import {
+    buildTypedDirectory,
+    createFileSystemObject,
+    focusFileExplorer,
+    getConfigurationAsync,
+    updateConfigurationAsync,
+} from '../utils';
 
 export class DirectoryWorker {
-    readonly bookmarkedDirectoryContextValue: string = 'directlyBookmarkedDirectory';
+    readonly myFolderDirContextValue: string = MY_FOLDER_DIRECTORY_CONTEXT;
     private bookmarkedDirectories: TypedDirectory[] = [];
     private hideContent: boolean = false;
 
@@ -20,7 +27,12 @@ export class DirectoryWorker {
 
     public async getChildren(element?: FileSystemObject): Promise<FileSystemObject[]> {
         if (element) {
-            return this.directorySearch(element.resourceUri);
+            if (this.hideContent) {
+                focusFileExplorer(element.resourceUri);
+                return [];
+            } else {
+                return this.directorySearch(element.resourceUri);
+            }
         } else {
             return this.bookmarkedDirectories.length > 0
                 ? this.createEntries(this.bookmarkedDirectories)
@@ -61,15 +73,11 @@ export class DirectoryWorker {
             .sort((a, b) => a[0].localeCompare(b[0]))
             .map((item) => {
                 const [name, type] = item;
-                const isDirectory =
-                    type === vscode.FileType.Directory
-                        ? vscode.TreeItemCollapsibleState.Collapsed
-                        : vscode.TreeItemCollapsibleState.None;
-
-                return new FileSystemObject(
+                return createFileSystemObject(
                     name,
-                    isDirectory,
+                    type,
                     vscode.Uri.file(`${uri.path}/${name}`),
+                    this.hideContent,
                 );
             });
     }
@@ -79,16 +87,15 @@ export class DirectoryWorker {
 
         for (const dir of bookmarkedDirectories) {
             const { path: filePath, type: type, name: folderName } = dir;
-            const file = vscode.Uri.file(filePath);
-
+            const fileUri = vscode.Uri.file(filePath);
             fileSystem.push(
-                new FileSystemObject(
-                    `${folderName}`,
-                    type === vscode.FileType.File
-                        ? vscode.TreeItemCollapsibleState.None
-                        : vscode.TreeItemCollapsibleState.Collapsed,
-                    file,
-                ).setContextValue(this.bookmarkedDirectoryContextValue),
+                createFileSystemObject(
+                    folderName,
+                    type,
+                    fileUri,
+                    this.hideContent,
+                    this.myFolderDirContextValue,
+                ),
             );
         }
 
