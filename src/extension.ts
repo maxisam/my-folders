@@ -4,9 +4,9 @@ import { DirectoryProviderCommands, vsCodeCommands } from './commands/CrudComman
 import { DirectoryWorker } from './operator/DirectoryWorker';
 import { DirectoryProvider } from './provider/DirectoryProvider';
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
     const directoryOperator = new DirectoryWorker(context, vscode.workspace.workspaceFolders);
-
+    await directoryOperator.initAsync();
     const directoryProvider = new DirectoryProvider(directoryOperator);
 
     vscode.window.registerTreeDataProvider('my-folders', directoryProvider);
@@ -35,8 +35,9 @@ export function activate(context: vscode.ExtensionContext) {
                 'You can only remove items that were directly added to the view',
             );
         }),
-        vscode.commands.registerCommand(DirectoryProviderCommands.RemoveAllItems, () =>
-            directoryProvider.removeAllItems(),
+        vscode.commands.registerCommand(
+            DirectoryProviderCommands.RemoveAllItems,
+            async () => await directoryProvider.removeAllItemsAsync(),
         ),
     );
 }

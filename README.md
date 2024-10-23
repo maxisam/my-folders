@@ -4,4 +4,5 @@ This is a vscode extension based on [Explorer Bookmark](https://github.com/UrosV
 
 with some improvements:
 
-- Rename bookmark name
+- Rename bookmark name with sorting
+- Save data to a configuration file (`.vscode/my-folders.json`)

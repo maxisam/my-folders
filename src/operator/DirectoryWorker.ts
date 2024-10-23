@@ -2,22 +2,29 @@ import * as vscode from 'vscode';
 
 import { FileSystemObject } from '../types/FileSystemObject';
 import type { TypedDirectory } from '../types/TypedDirectory';
-import { buildTypedDirectory } from '../types/TypedDirectory';
+import { buildTypedDirectory, getConfigurationAsync, updateConfigurationAsync } from '../utils';
 
 export class DirectoryWorker {
     readonly vsCodeExtensionConfigurationKey: string = 'my-folders';
     readonly saveWorkspaceConfigurationSettingKey: string = 'saveWorkspace';
     readonly storedBookmarksContextKey: string = 'storedBookmarks';
     readonly bookmarkedDirectoryContextValue: string = 'directlyBookmarkedDirectory';
-
     private bookmarkedDirectories: TypedDirectory[] = [];
     private saveWorkspaceSetting: boolean | undefined = false;
+    configDirUri: vscode.Uri;
 
     constructor(
         private extensionContext: vscode.ExtensionContext,
         private workspaceRoot: readonly vscode.WorkspaceFolder[] | undefined,
     ) {
-        this.hydrateState();
+        const workspaceRootPath = this.workspaceRoot
+            ? this.workspaceRoot[0].uri
+            : vscode.Uri.file('');
+        this.configDirUri = vscode.Uri.joinPath(workspaceRootPath, '.vscode');
+    }
+
+    public async initAsync() {
+        await this.hydrateStateAsync();
     }
 
     public async getChildren(element?: FileSystemObject): Promise<FileSystemObject[]> {
@@ -36,7 +43,7 @@ export class DirectoryWorker {
             // sort the bookmarks by name
             this.bookmarkedDirectories.sort((a, b) => a.name.localeCompare(b.name));
         }
-        this.saveBookmarks();
+        await this.saveBookmarksAsync();
     }
 
     public async removeItem(uri: vscode.Uri | undefined) {
@@ -49,12 +56,12 @@ export class DirectoryWorker {
                 this.bookmarkedDirectories.splice(index, 1);
             }
         }
-        this.saveBookmarks();
+        await this.saveBookmarksAsync();
     }
 
-    public removeAllItems() {
+    public async removeAllItemsAsync() {
         this.bookmarkedDirectories = [];
-        this.saveBookmarks();
+        await this.saveBookmarksAsync();
     }
 
     private async directorySearch(uri: vscode.Uri) {
@@ -97,27 +104,16 @@ export class DirectoryWorker {
         return fileSystem;
     }
 
-    private hydrateState(): void {
-        this.saveWorkspaceSetting = vscode.workspace
-            .getConfiguration(this.saveWorkspaceConfigurationSettingKey)
-            .get(this.saveWorkspaceConfigurationSettingKey);
-        this.bookmarkedDirectories =
-            (this.workspaceRoot
-                ? this.extensionContext.workspaceState.get(this.storedBookmarksContextKey)
-                : this.extensionContext.globalState.get(this.storedBookmarksContextKey)) || [];
+    private async hydrateStateAsync(): Promise<void> {
+        const config = await getConfigurationAsync(this.configDirUri);
+        if (config.bookmarkedDirectories) {
+            this.bookmarkedDirectories = config.bookmarkedDirectories;
+        }
     }
 
-    private saveBookmarks() {
-        if (this.workspaceRoot) {
-            this.extensionContext.workspaceState.update(
-                this.storedBookmarksContextKey,
-                this.bookmarkedDirectories,
-            );
-        } else {
-            this.extensionContext.globalState.update(
-                this.storedBookmarksContextKey,
-                this.bookmarkedDirectories,
-            );
-        }
+    private async saveBookmarksAsync() {
+        const config = await getConfigurationAsync(this.configDirUri);
+        config.bookmarkedDirectories = this.bookmarkedDirectories;
+        await updateConfigurationAsync(config, this.configDirUri);
     }
 }

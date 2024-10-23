@@ -30,8 +30,8 @@ export class DirectoryProvider implements vscode.TreeDataProvider<FileSystemObje
         this.refresh();
     }
 
-    removeAllItems() {
-        this.directoryOperator.removeAllItems();
+    async removeAllItemsAsync() {
+        await this.directoryOperator.removeAllItemsAsync();
         this.refresh();
     }
 
