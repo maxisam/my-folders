@@ -1,7 +1,7 @@
 {
     "name": "my-folders",
     "displayName": "my-folders",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "description": "my-folders",
     "publisher": "maxisam",
     "private": true,
