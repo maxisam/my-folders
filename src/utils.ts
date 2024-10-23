@@ -6,13 +6,20 @@ import { configFileName as CONFIG_FILE_NAME } from './constants';
 import type { IConfiguration } from './types/Configuration';
 import { TypedDirectory } from './types/TypedDirectory';
 
+export function getConfigurationDirUri(
+    workspaceRoot: readonly vscode.WorkspaceFolder[] | undefined,
+): vscode.Uri {
+    const workspaceRootPath = workspaceRoot ? workspaceRoot[0].uri : vscode.Uri.file('');
+    return vscode.Uri.joinPath(workspaceRootPath, '.vscode');
+}
+
 export async function getConfigurationAsync(configDirUri: vscode.Uri): Promise<IConfiguration> {
     const configPath = vscode.Uri.joinPath(configDirUri, CONFIG_FILE_NAME);
     try {
         const configData = await vscode.workspace.fs.readFile(configPath);
         return JSON.parse(configData.toString());
     } catch {
-        return { bookmarkedDirectories: [] };
+        return { bookmarkedDirectories: [], hideContent: false };
     }
 }
 

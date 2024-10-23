@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 
+import type { IConfiguration } from '../types/Configuration';
 import { FileSystemObject } from '../types/FileSystemObject';
 import type { TypedDirectory } from '../types/TypedDirectory';
 import { buildTypedDirectory, getConfigurationAsync, updateConfigurationAsync } from '../utils';
@@ -7,20 +8,14 @@ import { buildTypedDirectory, getConfigurationAsync, updateConfigurationAsync } 
 export class DirectoryWorker {
     readonly bookmarkedDirectoryContextValue: string = 'directlyBookmarkedDirectory';
     private bookmarkedDirectories: TypedDirectory[] = [];
-    configDirUri: vscode.Uri;
+    private hideContent: boolean = false;
 
     constructor(
         private extensionContext: vscode.ExtensionContext,
-        private workspaceRoot: readonly vscode.WorkspaceFolder[] | undefined,
+        private config: IConfiguration,
+        private configDirUri: vscode.Uri,
     ) {
-        const workspaceRootPath = this.workspaceRoot
-            ? this.workspaceRoot[0].uri
-            : vscode.Uri.file('');
-        this.configDirUri = vscode.Uri.joinPath(workspaceRootPath, '.vscode');
-    }
-
-    public async initAsync() {
-        await this.hydrateStateAsync();
+        this.hydrateState();
     }
 
     public async getChildren(element?: FileSystemObject): Promise<FileSystemObject[]> {
@@ -100,16 +95,17 @@ export class DirectoryWorker {
         return fileSystem;
     }
 
-    private async hydrateStateAsync(): Promise<void> {
-        const config = await getConfigurationAsync(this.configDirUri);
-        if (config.bookmarkedDirectories) {
-            this.bookmarkedDirectories = config.bookmarkedDirectories;
+    private hydrateState() {
+        if (this.config.bookmarkedDirectories) {
+            this.bookmarkedDirectories = this.config.bookmarkedDirectories;
         }
+        this.hideContent = this.config.hideContent;
     }
 
     private async saveBookmarksAsync() {
+        // in case users running 2 instances of the vscode.
         const config = await getConfigurationAsync(this.configDirUri);
         config.bookmarkedDirectories = this.bookmarkedDirectories;
-        await updateConfigurationAsync(config, this.configDirUri);
+        await updateConfigurationAsync(this.config, this.configDirUri);
     }
 }
