@@ -5,12 +5,8 @@ import type { TypedDirectory } from '../types/TypedDirectory';
 import { buildTypedDirectory, getConfigurationAsync, updateConfigurationAsync } from '../utils';
 
 export class DirectoryWorker {
-    readonly vsCodeExtensionConfigurationKey: string = 'my-folders';
-    readonly saveWorkspaceConfigurationSettingKey: string = 'saveWorkspace';
-    readonly storedBookmarksContextKey: string = 'storedBookmarks';
     readonly bookmarkedDirectoryContextValue: string = 'directlyBookmarkedDirectory';
     private bookmarkedDirectories: TypedDirectory[] = [];
-    private saveWorkspaceSetting: boolean | undefined = false;
     configDirUri: vscode.Uri;
 
     constructor(
@@ -37,7 +33,7 @@ export class DirectoryWorker {
         }
     }
 
-    public async selectItem(uri: vscode.Uri | undefined, name?: string | undefined) {
+    public async selectItemAsync(uri: vscode.Uri | undefined, name?: string | undefined) {
         if (uri) {
             this.bookmarkedDirectories.push(await buildTypedDirectory(uri, name));
             // sort the bookmarks by name
@@ -46,7 +42,7 @@ export class DirectoryWorker {
         await this.saveBookmarksAsync();
     }
 
-    public async removeItem(uri: vscode.Uri | undefined) {
+    public async removeItemAsync(uri: vscode.Uri | undefined) {
         if (uri) {
             const typedDirectory = await buildTypedDirectory(uri);
             const index = this.bookmarkedDirectories
