@@ -1,16 +1,17 @@
 name: ♨️ Publish
+run-name: Deploy ${{ github.ref_name}} @ ${{ github.sha}}
 
 permissions:
   contents: write
 
 on:
-# on tag push
+  # on tag push
   push:
-    tags: 
-      - "v[0-9]+"
-      - "v[0-9]+.[0-9]+"
-      - "v[0-9]+.[0-9]+.[0-9]+"
-      - "v[0-9]+.[0-9]+.[0-9]+-*"
+    tags:
+      - 'v[0-9]+'
+      - 'v[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+-*'
 
 jobs:
   publish:
