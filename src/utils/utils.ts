@@ -19,17 +19,13 @@ export function createFileSystemObject(
     type: vscode.FileType,
     fileUri: vscode.Uri,
     hideContent: boolean,
-    directoryContext?: string,
+    isMyFolderItem = false,
 ): FileSystemObject {
-    const collapsibleState =
-        type === vscode.FileType.File
-            ? vscode.TreeItemCollapsibleState.None
-            : vscode.TreeItemCollapsibleState.Collapsed;
-
-    const fObj = new FileSystemObject(folderName, collapsibleState, fileUri, hideContent);
-    if (directoryContext) {
-        fObj.setContextValue(directoryContext);
+    const fObj = new FileSystemObject(folderName, type, fileUri, hideContent);
+    if (isMyFolderItem) {
+        fObj.setContextValue();
     }
+
     return fObj;
 }
 

@@ -86,7 +86,7 @@
             },
             {
                 "command": "my-folders.focusInExplorer",
-                "title": "Focus on the selected item in file explorer view"
+                "title": "Focus on this in explorer view"
             },
             {
                 "command": "my-folders.clearFocusScope",
@@ -120,20 +120,20 @@
             "view/item/context": [
                 {
                     "command": "my-folders.removeItem",
-                    "when": "view == my-folders && viewItem == myFoldersDirectory"
+                    "when": "view == my-folders && (viewItem == myFoldersDirectory || viewItem == myFoldersFile)"
                 },
                 {
                     "command": "my-folders.removeItem",
-                    "when": "view == my-folders && viewItem == myFoldersDirectory",
+                    "when": "view == my-folders && (viewItem == myFoldersDirectory || viewItem == myFoldersFile)",
                     "group": "inline"
                 },
                 {
                     "command": "my-folders.renameItem",
-                    "when": "view == my-folders && viewItem == myFoldersDirectory"
+                    "when": "view == my-folders && (viewItem == myFoldersDirectory || viewItem == myFoldersFile)"
                 },
                 {
                     "command": "my-folders.cantRemoveItem",
-                    "when": "view == my-folders && viewItem != myFoldersDirectory"
+                    "when": "view == my-folders && viewItem != myFoldersDirectory && viewItem != myFoldersFile"
                 },
                 {
                     "command": "my-folders.focusInExplorer",

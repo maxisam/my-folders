@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 
-import { MY_FOLDER_DIRECTORY_CONTEXT } from '../core/constants';
 import type { IConfiguration } from '../types/Configuration';
 import type { FileSystemObject } from '../types/FileSystemObject';
 import type { ITypedDirectory } from '../types/TypedDirectory';
@@ -8,7 +7,6 @@ import { getConfigurationAsync, updateConfigurationAsync } from '../utils/config
 import { buildTypedDirectory, createFileSystemObject, focusFileExplorer } from '../utils/utils';
 
 export class DirectoryOperator {
-    readonly myFolderDirContextValue: string = MY_FOLDER_DIRECTORY_CONTEXT;
     private bookmarkedDirectories: ITypedDirectory[] = [];
     private hideContent: boolean = false;
 
@@ -93,21 +91,13 @@ export class DirectoryOperator {
 
     private async createEntries(bookmarkedDirectories: ITypedDirectory[]) {
         const fileSystem: FileSystemObject[] = [];
-
         for (const dir of bookmarkedDirectories) {
             const { path: filePath, type: type, name: folderName } = dir;
             const fileUri = vscode.Uri.file(filePath);
             fileSystem.push(
-                createFileSystemObject(
-                    folderName,
-                    type,
-                    fileUri,
-                    this.hideContent,
-                    this.myFolderDirContextValue,
-                ),
+                createFileSystemObject(folderName, type, fileUri, this.hideContent, true),
             );
         }
-
         return fileSystem;
     }
 

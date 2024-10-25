@@ -1,6 +1,13 @@
 import * as vscode from 'vscode';
 
 import { ExtensionCommands } from '../core/commands';
+import { MY_FOLDER_CONTEXT_DIRECTORY, MY_FOLDER_CONTEXT_FILE } from '../core/constants';
+
+function getCollapsibleState(fileType: vscode.FileType) {
+    return fileType === vscode.FileType.File
+        ? vscode.TreeItemCollapsibleState.None
+        : vscode.TreeItemCollapsibleState.Collapsed;
+}
 
 export class FileSystemObject extends vscode.TreeItem {
     resourceUri: vscode.Uri;
@@ -8,34 +15,29 @@ export class FileSystemObject extends vscode.TreeItem {
 
     constructor(
         public readonly label: string,
-        public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+        public readonly fileType: vscode.FileType,
         uri: vscode.Uri,
         private hideContent: boolean,
     ) {
+        const collapsibleState = getCollapsibleState(fileType);
         super(label, collapsibleState);
         this.tooltip = uri.fsPath;
         this.resourceUri = uri;
-        this.command = this.createCommand(collapsibleState);
-        this.iconPath = this.getIconPath(collapsibleState);
+        this.command = this.createCommand(fileType);
+        this.iconPath = this.getIconPath(fileType);
     }
 
-    private getIconPath(
-        collapsibleState: vscode.TreeItemCollapsibleState,
-    ):
-        | string
-        | vscode.Uri
-        | { light: string | vscode.Uri; dark: string | vscode.Uri }
-        | vscode.ThemeIcon {
-        if (this.isFile(collapsibleState)) {
+    private getIconPath(fileType: vscode.FileType) {
+        if (fileType === vscode.FileType.File) {
             return new vscode.ThemeIcon('symbol-file');
         } else {
             return new vscode.ThemeIcon('symbol-folder');
         }
     }
 
-    private createCommand(collapsibleState: vscode.TreeItemCollapsibleState) {
+    private createCommand(fileType: vscode.FileType) {
         // If the item is a file, return a command to open the file
-        if (this.isFile(collapsibleState)) {
+        if (fileType === vscode.FileType.File) {
             return {
                 arguments: [this],
                 command: ExtensionCommands.OpenItem,
@@ -53,12 +55,11 @@ export class FileSystemObject extends vscode.TreeItem {
         }
     }
 
-    private isFile(collapsibleState: vscode.TreeItemCollapsibleState) {
-        return collapsibleState === vscode.TreeItemCollapsibleState.None;
-    }
-
-    setContextValue(value: string) {
-        this.contextValue = value;
-        return this;
+    setContextValue() {
+        if (this.fileType === vscode.FileType.Directory) {
+            this.contextValue = MY_FOLDER_CONTEXT_DIRECTORY;
+        } else {
+            this.contextValue = MY_FOLDER_CONTEXT_FILE;
+        }
     }
 }
