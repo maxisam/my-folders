@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
-import { ExtensionCommands, vsCodeCommands } from './commands/CrudCommands';
 import { REGISTER_TREE_DATA_PROVIDER } from './constants';
+import { ExtensionCommands, vsCodeCommands } from './core/commands';
 import { DirectoryOperator } from './operator/DirectoryOperator';
 import { DirectoryProvider } from './provider/DirectoryProvider';
 import type { FileSystemObject } from './types/FileSystemObject';

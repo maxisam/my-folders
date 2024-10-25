@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { ExtensionCommands } from '../commands/CrudCommands';
+import { ExtensionCommands } from '../core/commands';
 
 export class FileSystemObject extends vscode.TreeItem {
     resourceUri: vscode.Uri;
