@@ -6,7 +6,7 @@ import { clearScope, initScope, scopeToThis } from './core/scope';
 import { DirectoryOperator } from './operator/DirectoryOperator';
 import { DirectoryProvider } from './provider/DirectoryProvider';
 import type { FileSystemObject } from './types/FileSystemObject';
-import { getConfigurationAsync, getConfigurationDirUri } from './utils';
+import { getConfigurationAsync, getConfigurationDirUri } from './utils/configUtils';
 
 export async function activate(context: vscode.ExtensionContext) {
     const configDirUri = getConfigurationDirUri(vscode.workspace.workspaceFolders);

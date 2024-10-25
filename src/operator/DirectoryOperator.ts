@@ -4,13 +4,8 @@ import { MY_FOLDER_DIRECTORY_CONTEXT } from '../core/constants';
 import type { IConfiguration } from '../types/Configuration';
 import type { FileSystemObject } from '../types/FileSystemObject';
 import type { TypedDirectory } from '../types/TypedDirectory';
-import {
-    buildTypedDirectory,
-    createFileSystemObject,
-    focusFileExplorer,
-    getConfigurationAsync,
-    updateConfigurationAsync,
-} from '../utils';
+import { buildTypedDirectory, createFileSystemObject, focusFileExplorer } from '../utils';
+import { getConfigurationAsync, updateConfigurationAsync } from '../utils/configUtils';
 
 export class DirectoryOperator {
     readonly myFolderDirContextValue: string = MY_FOLDER_DIRECTORY_CONTEXT;

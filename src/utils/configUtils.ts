@@ -1,8 +1,39 @@
+import { Buffer } from 'buffer';
+
 import * as vscode from 'vscode';
 
+import { CONFIG_FILE_NAME } from '../core/constants';
 import type { ExcludeObject, IConfiguration } from '../types/Configuration';
+import { defaultConfiguration } from '../types/Configuration';
 
 const workspaceFolders = vscode.workspace.workspaceFolders;
+
+export async function updateConfigurationAsync(config: IConfiguration, configDirUri: vscode.Uri) {
+    try {
+        await vscode.workspace.fs.stat(configDirUri);
+    } catch {
+        await vscode.workspace.fs.createDirectory(configDirUri);
+    }
+    const configUri = vscode.Uri.joinPath(configDirUri, CONFIG_FILE_NAME);
+    const configData = Buffer.from(JSON.stringify(config, null, 4), 'utf8');
+    await vscode.workspace.fs.writeFile(configUri, configData);
+}
+export function getConfigurationDirUri(
+    workspaceRoot: readonly vscode.WorkspaceFolder[] | undefined,
+): vscode.Uri {
+    const workspaceRootPath = workspaceRoot ? workspaceRoot[0].uri : vscode.Uri.file('');
+    return vscode.Uri.joinPath(workspaceRootPath, '.vscode');
+}
+
+export async function getConfigurationAsync(configDirUri: vscode.Uri): Promise<IConfiguration> {
+    const configPath = vscode.Uri.joinPath(configDirUri, CONFIG_FILE_NAME);
+    try {
+        const configData = await vscode.workspace.fs.readFile(configPath);
+        return JSON.parse(configData.toString());
+    } catch {
+        return defaultConfiguration;
+    }
+}
 
 export function getExcludes() {
     if (!workspaceFolders || workspaceFolders.length === 0) {
