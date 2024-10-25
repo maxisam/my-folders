@@ -1,4 +1,4 @@
-import { EXTENSION_NAME } from '../constants';
+import { EXTENSION_NAME } from './constants';
 
 export enum vsCodeCommands {
     Open = 'vscode.open',

@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
 
-import { CONTEXT_IS_SCOPED } from '../constants';
 import type { IConfiguration } from '../types/Configuration';
 import { updateConfigurationAsync } from '../utils';
 import { createExcludeList, getExcludes, updateExcludes } from '../utils/configUtils';
 import { getRelativePath } from '../utils/pathUtils';
+import { CONTEXT_IS_SCOPED } from './constants';
 
 export function initScope(config: IConfiguration) {
     if (config.activeScope) {

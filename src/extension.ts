@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
-import { REGISTER_TREE_DATA_PROVIDER } from './constants';
 import { ExtensionCommands, vsCodeCommands } from './core/commands';
+import { REGISTER_TREE_DATA_PROVIDER } from './core/constants';
 import { clearScope, initScope, scopeToThis } from './core/scope';
 import { DirectoryOperator } from './operator/DirectoryOperator';
 import { DirectoryProvider } from './provider/DirectoryProvider';

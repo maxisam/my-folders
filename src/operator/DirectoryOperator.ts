@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { MY_FOLDER_DIRECTORY_CONTEXT } from '../constants';
+import { MY_FOLDER_DIRECTORY_CONTEXT } from '../core/constants';
 import type { IConfiguration } from '../types/Configuration';
 import type { FileSystemObject } from '../types/FileSystemObject';
 import type { TypedDirectory } from '../types/TypedDirectory';

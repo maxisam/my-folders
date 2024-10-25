@@ -2,7 +2,7 @@ import { Buffer } from 'buffer';
 
 import * as vscode from 'vscode';
 
-import { CONFIG_FILE_NAME } from './constants';
+import { CONFIG_FILE_NAME } from './core/constants';
 import type { IConfiguration } from './types/Configuration';
 import { defaultConfiguration } from './types/Configuration';
 import { FileSystemObject } from './types/FileSystemObject';
