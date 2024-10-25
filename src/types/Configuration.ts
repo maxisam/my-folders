@@ -1,7 +1,7 @@
-import type { TypedDirectory } from './TypedDirectory';
+import type { ITypedDirectory } from './TypedDirectory';
 
 export interface IConfiguration {
-    bookmarkedDirectories: TypedDirectory[];
+    bookmarkedDirectories: ITypedDirectory[];
     hideContent: boolean;
     /**
      * Allow users to specify a custom path for the settings file, so it will be useful if the users

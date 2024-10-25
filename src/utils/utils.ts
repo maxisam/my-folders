@@ -1,11 +1,17 @@
+import * as path from 'path';
+
 import * as vscode from 'vscode';
 
-import { FileSystemObject } from './types/FileSystemObject';
-import { TypedDirectory } from './types/TypedDirectory';
+import { FileSystemObject } from '../types/FileSystemObject';
+import type { ITypedDirectory } from '../types/TypedDirectory';
 
-export async function buildTypedDirectory(uri: vscode.Uri, name?: string | undefined) {
+export async function buildTypedDirectory(
+    uri: vscode.Uri,
+    name?: string,
+): Promise<ITypedDirectory> {
     const type = (await vscode.workspace.fs.stat(uri)).type;
-    return new TypedDirectory(uri.path, type, name);
+    const _name = name || path.basename(uri.path) || uri.path;
+    return { name: _name, path: uri.path, type };
 }
 
 export function createFileSystemObject(

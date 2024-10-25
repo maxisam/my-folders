@@ -3,13 +3,13 @@ import * as vscode from 'vscode';
 import { MY_FOLDER_DIRECTORY_CONTEXT } from '../core/constants';
 import type { IConfiguration } from '../types/Configuration';
 import type { FileSystemObject } from '../types/FileSystemObject';
-import type { TypedDirectory } from '../types/TypedDirectory';
-import { buildTypedDirectory, createFileSystemObject, focusFileExplorer } from '../utils';
+import type { ITypedDirectory } from '../types/TypedDirectory';
 import { getConfigurationAsync, updateConfigurationAsync } from '../utils/configUtils';
+import { buildTypedDirectory, createFileSystemObject, focusFileExplorer } from '../utils/utils';
 
 export class DirectoryOperator {
     readonly myFolderDirContextValue: string = MY_FOLDER_DIRECTORY_CONTEXT;
-    private bookmarkedDirectories: TypedDirectory[] = [];
+    private bookmarkedDirectories: ITypedDirectory[] = [];
     private hideContent: boolean = false;
 
     constructor(
@@ -91,7 +91,7 @@ export class DirectoryOperator {
             });
     }
 
-    private async createEntries(bookmarkedDirectories: TypedDirectory[]) {
+    private async createEntries(bookmarkedDirectories: ITypedDirectory[]) {
         const fileSystem: FileSystemObject[] = [];
 
         for (const dir of bookmarkedDirectories) {
