@@ -2,11 +2,11 @@ import * as vscode from 'vscode';
 
 import { REGISTER_TREE_DATA_PROVIDER } from './constants';
 import { ExtensionCommands, vsCodeCommands } from './core/commands';
+import { clearScope, initScope, scopeToThis } from './core/scope';
 import { DirectoryOperator } from './operator/DirectoryOperator';
 import { DirectoryProvider } from './provider/DirectoryProvider';
 import type { FileSystemObject } from './types/FileSystemObject';
 import { getConfigurationAsync, getConfigurationDirUri } from './utils';
-import { clearScope, initScope, scopeToThis } from './utils/scopeUtils';
 
 export async function activate(context: vscode.ExtensionContext) {
     const configDirUri = getConfigurationDirUri(vscode.workspace.workspaceFolders);
