@@ -65,13 +65,15 @@ export class DirectoryOperator {
     }
 
     public async removeItemAsync(uri: vscode.Uri | undefined) {
-        if (uri) {
-            const index = this.bookmarkedDirectories.map((e) => e.path).indexOf(uri.path);
-            if (index > -1) {
-                this.bookmarkedDirectories.splice(index, 1);
-            }
+        if (!uri) {
+            return;
         }
-        await this.saveBookmarksAsync();
+
+        const index = this.bookmarkedDirectories.findIndex((dir) => dir.path === uri.path);
+        if (index !== -1) {
+            this.bookmarkedDirectories.splice(index, 1);
+            await this.saveBookmarksAsync();
+        }
     }
 
     public async removeAllItemsAsync() {
