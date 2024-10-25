@@ -25,6 +25,21 @@ export class DirectoryOperator {
         this.hydrateState();
     }
 
+    public async renameItemAsync(element: FileSystemObject, value: string) {
+        if (!value) {
+            return;
+        }
+        const index = this.bookmarkedDirectories.findIndex(
+            (item) => item.path === element.resourceUri.path,
+        );
+
+        if (index > -1) {
+            this.bookmarkedDirectories[index].name = value;
+            this.bookmarkedDirectories.sort((a, b) => a.name.localeCompare(b.name));
+            await this.saveBookmarksAsync();
+        }
+    }
+
     public async getChildren(element?: FileSystemObject): Promise<FileSystemObject[]> {
         if (element) {
             if (this.hideContent) {
@@ -51,10 +66,7 @@ export class DirectoryOperator {
 
     public async removeItemAsync(uri: vscode.Uri | undefined) {
         if (uri) {
-            const typedDirectory = await buildTypedDirectory(uri);
-            const index = this.bookmarkedDirectories
-                .map((e) => e.path)
-                .indexOf(typedDirectory.path);
+            const index = this.bookmarkedDirectories.map((e) => e.path).indexOf(uri.path);
             if (index > -1) {
                 this.bookmarkedDirectories.splice(index, 1);
             }

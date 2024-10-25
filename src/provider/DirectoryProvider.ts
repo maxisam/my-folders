@@ -36,16 +36,15 @@ export class DirectoryProvider implements vscode.TreeDataProvider<FileSystemObje
     }
 
     async renameItemAsync(element: FileSystemObject): Promise<void> {
-        const value = await vscode.window.showInputBox({
-            placeHolder: 'New name for bookmark',
+        const newName = await vscode.window.showInputBox({
+            placeHolder: `New name for ${element.label}`,
         });
-
-        if (!value) {
+        if (!newName) {
             return;
         }
 
-        await this.removeItemAsync(element.resourceUri);
-        await this.selectItemAsync(element.resourceUri, value);
+        await this.directoryOperator.renameItemAsync(element, newName);
+        this.refresh();
     }
 
     refresh(): void {
