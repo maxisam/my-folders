@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 
 import { ExtensionCommands, vsCodeCommands } from './commands/CrudCommands';
 import { REGISTER_TREE_DATA_PROVIDER } from './constants';
-import { DirectoryWorker } from './operator/DirectoryWorker';
+import { DirectoryOperator } from './operator/DirectoryOperator';
 import { DirectoryProvider } from './provider/DirectoryProvider';
 import { getConfigurationAsync, getConfigurationDirUri } from './utils';
 
@@ -10,7 +10,7 @@ export async function activate(context: vscode.ExtensionContext) {
     const configDirUri = getConfigurationDirUri(vscode.workspace.workspaceFolders);
     const config = await getConfigurationAsync(configDirUri);
 
-    const directoryOperator = new DirectoryWorker(context, config, configDirUri);
+    const directoryOperator = new DirectoryOperator(context, config, configDirUri);
     const directoryProvider = new DirectoryProvider(directoryOperator);
     vscode.window.registerTreeDataProvider(REGISTER_TREE_DATA_PROVIDER, directoryProvider);
 

@@ -12,7 +12,7 @@ import {
     updateConfigurationAsync,
 } from '../utils';
 
-export class DirectoryWorker {
+export class DirectoryOperator {
     readonly myFolderDirContextValue: string = MY_FOLDER_DIRECTORY_CONTEXT;
     private bookmarkedDirectories: TypedDirectory[] = [];
     private hideContent: boolean = false;

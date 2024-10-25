@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import type { DirectoryWorker } from '../operator/DirectoryWorker';
+import type { DirectoryOperator } from '../operator/DirectoryOperator';
 import type { FileSystemObject } from '../types/FileSystemObject';
 
 export class DirectoryProvider implements vscode.TreeDataProvider<FileSystemObject> {
@@ -10,7 +10,7 @@ export class DirectoryProvider implements vscode.TreeDataProvider<FileSystemObje
     readonly onDidChangeTreeData: vscode.Event<FileSystemObject | undefined | null | void> =
         this._onDidChangeTreeData.event;
 
-    constructor(private directoryOperator: DirectoryWorker) {}
+    constructor(private directoryOperator: DirectoryOperator) {}
 
     getTreeItem(element: FileSystemObject): vscode.TreeItem | Thenable<vscode.TreeItem> {
         return element;
