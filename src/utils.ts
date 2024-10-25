@@ -2,8 +2,9 @@ import { Buffer } from 'buffer';
 
 import * as vscode from 'vscode';
 
-import { configFileName as CONFIG_FILE_NAME } from './constants';
+import { CONFIG_FILE_NAME } from './constants';
 import type { IConfiguration } from './types/Configuration';
+import { defaultConfiguration } from './types/Configuration';
 import { FileSystemObject } from './types/FileSystemObject';
 import { TypedDirectory } from './types/TypedDirectory';
 
@@ -20,7 +21,7 @@ export async function getConfigurationAsync(configDirUri: vscode.Uri): Promise<I
         const configData = await vscode.workspace.fs.readFile(configPath);
         return JSON.parse(configData.toString());
     } catch {
-        return { bookmarkedDirectories: [], hideContent: false };
+        return defaultConfiguration;
     }
 }
 

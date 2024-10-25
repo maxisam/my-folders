@@ -12,4 +12,6 @@ export enum ExtensionCommands {
     RemoveItem = `${EXTENSION_NAME}.removeItem`,
     RemoveAllItems = `${EXTENSION_NAME}.removeAllItems`,
     RenameItem = `${EXTENSION_NAME}.renameItem`,
+    FocusInExplorer = `${EXTENSION_NAME}.focusInExplorer`,
+    ClearFocusScope = `${EXTENSION_NAME}.clearFocusScope`,
 }

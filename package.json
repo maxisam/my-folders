@@ -83,6 +83,15 @@
             {
                 "command": "my-folders.cantRemoveItem",
                 "title": "Remove from My Folders"
+            },
+            {
+                "command": "my-folders.focusInExplorer",
+                "title": "Focus on the selected item in file explorer view"
+            },
+            {
+                "command": "my-folders.clearFocusScope",
+                "title": "Clear focus scope",
+                "icon": "$(eye-closed)"
             }
         ],
         "menus": {
@@ -96,6 +105,11 @@
                     "command": "my-folders.removeAllItems",
                     "when": "view == my-folders",
                     "group": "navigation"
+                },
+                {
+                    "command": "my-folders.clearFocusScope",
+                    "group": "navigation",
+                    "when": "view == 'workbench.explorer.fileView' && my-folders.isScoped"
                 }
             ],
             "explorer/context": [
@@ -120,6 +134,10 @@
                 {
                     "command": "my-folders.cantRemoveItem",
                     "when": "view == my-folders && viewItem != myFoldersDirectory"
+                },
+                {
+                    "command": "my-folders.focusInExplorer",
+                    "when": "view == my-folders && viewItem == myFoldersDirectory"
                 }
             ]
         },

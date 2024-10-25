@@ -4,12 +4,14 @@ import { ExtensionCommands, vsCodeCommands } from './commands/CrudCommands';
 import { REGISTER_TREE_DATA_PROVIDER } from './constants';
 import { DirectoryOperator } from './operator/DirectoryOperator';
 import { DirectoryProvider } from './provider/DirectoryProvider';
+import type { FileSystemObject } from './types/FileSystemObject';
 import { getConfigurationAsync, getConfigurationDirUri } from './utils';
+import { clearScope, initScope, scopeToThis } from './utils/scopeUtils';
 
 export async function activate(context: vscode.ExtensionContext) {
     const configDirUri = getConfigurationDirUri(vscode.workspace.workspaceFolders);
     const config = await getConfigurationAsync(configDirUri);
-
+    initScope(config);
     const directoryOperator = new DirectoryOperator(context, config, configDirUri);
     const directoryProvider = new DirectoryProvider(directoryOperator);
     vscode.window.registerTreeDataProvider(REGISTER_TREE_DATA_PROVIDER, directoryProvider);
@@ -43,6 +45,23 @@ export async function activate(context: vscode.ExtensionContext) {
             ExtensionCommands.RemoveAllItems,
             async () => await directoryProvider.removeAllItemsAsync(),
         ),
+        vscode.commands.registerCommand(
+            ExtensionCommands.FocusInExplorer,
+            async (element: FileSystemObject) => {
+                const path = element.resourceUri;
+                if (!path) {
+                    vscode.window.showInformationMessage(
+                        'Use this command from the Explorer context menu.',
+                    );
+                    return;
+                }
+                await clearScope(config, configDirUri);
+                await scopeToThis(path, config, configDirUri);
+            },
+        ),
+        vscode.commands.registerCommand(ExtensionCommands.ClearFocusScope, async () => {
+            await clearScope(config, configDirUri);
+        }),
     );
 }
 
