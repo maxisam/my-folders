@@ -16,11 +16,26 @@ export class FileSystemObject extends vscode.TreeItem {
         this.tooltip = uri.fsPath;
         this.resourceUri = uri;
         this.command = this.createCommand(collapsibleState);
+        this.iconPath = this.getIconPath(collapsibleState);
+    }
+
+    private getIconPath(
+        collapsibleState: vscode.TreeItemCollapsibleState,
+    ):
+        | string
+        | vscode.Uri
+        | { light: string | vscode.Uri; dark: string | vscode.Uri }
+        | vscode.ThemeIcon {
+        if (this.isFile(collapsibleState)) {
+            return new vscode.ThemeIcon('symbol-file');
+        } else {
+            return new vscode.ThemeIcon('symbol-folder');
+        }
     }
 
     private createCommand(collapsibleState: vscode.TreeItemCollapsibleState) {
         // If the item is a file, return a command to open the file
-        if (collapsibleState === vscode.TreeItemCollapsibleState.None) {
+        if (this.isFile(collapsibleState)) {
             return {
                 arguments: [this],
                 command: ExtensionCommands.OpenItem,
@@ -36,6 +51,10 @@ export class FileSystemObject extends vscode.TreeItem {
                 title: this.label,
             };
         }
+    }
+
+    private isFile(collapsibleState: vscode.TreeItemCollapsibleState) {
+        return collapsibleState === vscode.TreeItemCollapsibleState.None;
     }
 
     setContextValue(value: string) {
