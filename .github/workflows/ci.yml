@@ -1,4 +1,4 @@
-name: 🏃CI
+name: 🏃 CI
 
 permissions:
   contents: write
@@ -12,7 +12,7 @@ jobs:
   test:
     strategy:
       matrix:
-        os: 
+        os:
           - ubuntu-latest
           # - macos-latest
           # - windows-latest
