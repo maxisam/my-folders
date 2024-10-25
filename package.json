@@ -106,20 +106,20 @@
             "view/item/context": [
                 {
                     "command": "my-folders.removeItem",
-                    "when": "view == my-folders && viewItem == directlyBookmarkedDirectory"
+                    "when": "view == my-folders && viewItem == myFoldersDirectory"
                 },
                 {
                     "command": "my-folders.removeItem",
-                    "when": "view == my-folders && viewItem == directlyBookmarkedDirectory",
+                    "when": "view == my-folders && viewItem == myFoldersDirectory",
                     "group": "inline"
                 },
                 {
                     "command": "my-folders.renameItem",
-                    "when": "view == my-folders && viewItem == directlyBookmarkedDirectory"
+                    "when": "view == my-folders && viewItem == myFoldersDirectory"
                 },
                 {
                     "command": "my-folders.cantRemoveItem",
-                    "when": "view == my-folders && viewItem != directlyBookmarkedDirectory"
+                    "when": "view == my-folders && viewItem != myFoldersDirectory"
                 }
             ]
         },
