@@ -112,6 +112,6 @@ export class DirectoryOperator {
         // in case users running 2 instances of the vscode.
         const config = await getConfigurationAsync(this.configDirUri);
         config.bookmarkedDirectories = this.bookmarkedDirectories;
-        await updateConfigurationAsync(this.config, this.configDirUri);
+        await updateConfigurationAsync(config, this.configDirUri);
     }
 }
