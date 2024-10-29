@@ -2,8 +2,8 @@ import * as vscode from 'vscode';
 
 import { registerCommands } from './core/commands';
 import { REGISTER_TREE_DATA_PROVIDER } from './core/constants';
+import { DirectoryOperator } from './core/DirectoryOperator';
 import { initScope } from './core/scope';
-import { DirectoryOperator } from './operator/DirectoryOperator';
 import { DirectoryProvider } from './provider/DirectoryProvider';
 import { getConfigurationAsync, getConfigurationDirUri } from './utils/configUtils';
 

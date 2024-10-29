@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import type { DirectoryOperator } from '../operator/DirectoryOperator';
+import type { DirectoryOperator } from '../core/DirectoryOperator';
 import type { FileSystemObject } from '../types/FileSystemObject';
 
 export class DirectoryProvider implements vscode.TreeDataProvider<FileSystemObject> {
