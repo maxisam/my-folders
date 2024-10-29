@@ -8,4 +8,4 @@ meta.json
 stats.html
 
 test-workspace/
-.vscode/my-folders.json
+coverage/
