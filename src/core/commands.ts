@@ -8,6 +8,7 @@ import { clearScope, scopeToThis } from './scope';
 
 export enum vsCodeCommands {
     Open = 'vscode.open',
+    SetContext = 'setContext',
 }
 
 export enum ExtensionCommands {

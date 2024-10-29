@@ -8,14 +8,15 @@ import {
     updateExcludes,
 } from '../utils/configUtils';
 import { getRelativePath } from '../utils/pathUtils';
+import { vsCodeCommands } from './commands';
 import { CONTEXT_IS_SCOPED } from './constants';
 
+function setContextScope(isScoped: boolean) {
+    vscode.commands.executeCommand(vsCodeCommands.SetContext, CONTEXT_IS_SCOPED, isScoped);
+}
+
 export function initScope(config: IConfiguration) {
-    if (config.activeScope) {
-        vscode.commands.executeCommand('setContext', CONTEXT_IS_SCOPED, true);
-    } else {
-        vscode.commands.executeCommand('setContext', CONTEXT_IS_SCOPED, false);
-    }
+    setContextScope(!!config.activeScope);
 }
 
 export async function scopeToThis(
@@ -37,7 +38,7 @@ export async function scopeToThis(
 
             config.activeScope = relative;
             await updateConfigurationAsync(config, configDirUri);
-            vscode.commands.executeCommand('setContext', CONTEXT_IS_SCOPED, true);
+            setContextScope(true);
         } else {
             vscode.window.showErrorMessage('Error in reading vscode settings.');
         }
@@ -64,7 +65,7 @@ export async function clearScope(config: IConfiguration, configDirUri: vscode.Ur
 
                 config.activeScope = undefined;
                 await updateConfigurationAsync(config, configDirUri);
-                vscode.commands.executeCommand('setContext', CONTEXT_IS_SCOPED, false);
+                setContextScope(false);
             } else {
                 vscode.window.showErrorMessage('Error in reading vscode settings.');
             }
