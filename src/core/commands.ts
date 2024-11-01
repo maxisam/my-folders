@@ -9,6 +9,7 @@ import { clearScope, scopeToThis } from './scope';
 export enum vsCodeCommands {
     Open = 'vscode.open',
     SetContext = 'setContext',
+    GitRefresh = 'git.refresh',
 }
 
 export enum ExtensionCommands {
