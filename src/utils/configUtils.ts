@@ -29,7 +29,8 @@ export async function getConfigurationAsync(configDirUri: vscode.Uri): Promise<I
     const configPath = vscode.Uri.joinPath(configDirUri, CONFIG_FILE_NAME);
     try {
         const configData = await vscode.workspace.fs.readFile(configPath);
-        return JSON.parse(configData.toString());
+        const origConfig = JSON.parse(configData.toString());
+        return { ...defaultConfiguration, ...origConfig };
     } catch {
         return defaultConfiguration;
     }
