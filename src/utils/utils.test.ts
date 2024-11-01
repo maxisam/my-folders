@@ -1,4 +1,4 @@
-import { after, before } from 'node:test';
+import { before } from 'node:test';
 import { strictEqual, throws } from 'assert';
 
 import promiseSpawn from '@npmcli/promise-spawn';
@@ -14,22 +14,6 @@ import {
 } from './utils';
 
 describe('Utils Tests', () => {
-    before(() => {
-        (promiseSpawn as unknown as jest.Mock).mockReset();
-        // swap the showErrorMessage function with a console.error
-        vscode.window.showErrorMessage = <T>(
-            message: string,
-            ...items: T[]
-        ): Thenable<T | undefined> => {
-            console.error(message);
-            return Promise.resolve(undefined);
-        };
-    });
-
-    after(() => {
-        vscode.window.showInformationMessage('Test end!');
-    });
-
     describe('checkNull', () => {
         it('should return the value if not null', () => {
             const result = checkNull('test', 'Error message');
@@ -89,7 +73,7 @@ describe('Utils Tests', () => {
 
         it('should return stdout on success', async () => {
             const result = await runCommand('git', ['status'], '.');
-            // result.startsWith('On branch');
+            result.startsWith('On branch');
         });
     });
 });
