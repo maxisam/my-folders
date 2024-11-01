@@ -7,5 +7,4 @@ node_modules
 meta.json
 stats.html
 
-test-workspace/
 coverage/
