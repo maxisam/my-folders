@@ -29,14 +29,14 @@ export async function scopeToThis(
     try {
         const relative = getRelativePath(path, workspaceFolders);
 
-        const excludes = getExcludes();
+        const excludes = getExcludes(workspaceFolders);
 
         if (excludes && relative) {
             const paths = createExcludeList(relative);
 
             paths.forEach((path) => (excludes[path] = true));
 
-            await updateExcludes(excludes, config);
+            await updateExcludes(excludes, config, workspaceFolders);
 
             config.activeScope = relative;
             await updateConfigurationAsync(config, configDirUri);
@@ -63,7 +63,7 @@ export async function clearScope(config: IConfiguration, configDirUri: vscode.Ur
                     }
                 });
 
-                await updateExcludes(excludes, config);
+                await updateExcludes(excludes, config, workspaceFolders);
 
                 config.activeScope = undefined;
                 await updateConfigurationAsync(config, configDirUri);

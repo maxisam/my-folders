@@ -6,8 +6,6 @@ import { CONFIG_FILE_NAME } from '../core/constants';
 import type { ExcludeObject, IConfiguration } from '../types/Configuration';
 import { defaultConfiguration } from '../types/Configuration';
 
-const workspaceFolders = vscode.workspace.workspaceFolders;
-
 export async function updateConfigurationAsync(config: IConfiguration, configDirUri: vscode.Uri) {
     try {
         await vscode.workspace.fs.stat(configDirUri);
@@ -36,7 +34,7 @@ export async function getConfigurationAsync(configDirUri: vscode.Uri): Promise<I
     }
 }
 
-export function getExcludes() {
+export function getExcludes(workspaceFolders?: readonly vscode.WorkspaceFolder[]) {
     if (!workspaceFolders || workspaceFolders.length === 0) {
         return;
     }
@@ -50,7 +48,11 @@ export function getExcludes() {
     }
 }
 
-export async function updateExcludes(excludes: ExcludeObject, config: IConfiguration) {
+export async function updateExcludes(
+    excludes: ExcludeObject,
+    config: IConfiguration,
+    workspaceFolders?: readonly vscode.WorkspaceFolder[],
+) {
     if (!workspaceFolders || workspaceFolders.length === 0) {
         return;
     }
