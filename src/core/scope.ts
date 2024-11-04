@@ -11,6 +11,8 @@ import { getRelativePath } from '../utils/pathUtils';
 import { vsCodeCommands } from './commands';
 import { CONTEXT_IS_SCOPED } from './constants';
 
+const workspaceFolders = vscode.workspace.workspaceFolders;
+
 function setContextScope(isScoped: boolean) {
     vscode.commands.executeCommand(vsCodeCommands.SetContext, CONTEXT_IS_SCOPED, isScoped);
 }
@@ -25,7 +27,7 @@ export async function scopeToThis(
     configDirUri: vscode.Uri,
 ) {
     try {
-        const relative = getRelativePath(path);
+        const relative = getRelativePath(path, workspaceFolders);
 
         const excludes = getExcludes();
 
