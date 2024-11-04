@@ -17,9 +17,9 @@ export async function updateConfigurationAsync(config: IConfiguration, configDir
     await vscode.workspace.fs.writeFile(configUri, configData);
 }
 export function getConfigurationDirUri(
-    workspaceRoot: readonly vscode.WorkspaceFolder[] | undefined,
+    workspaceFolders: readonly vscode.WorkspaceFolder[] | undefined,
 ): vscode.Uri {
-    const workspaceRootPath = workspaceRoot ? workspaceRoot[0].uri : vscode.Uri.file('');
+    const workspaceRootPath = workspaceFolders ? workspaceFolders[0].uri : vscode.Uri.file('');
     return vscode.Uri.joinPath(workspaceRootPath, '.vscode');
 }
 
