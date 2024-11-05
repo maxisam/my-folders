@@ -4,7 +4,12 @@ import { vsCodeCommands } from '../core/commands';
 import type { API as GitApi, GitExtension } from '../types/git';
 import { checkNull, runCommand } from './utils';
 
+let _GitApi: GitApi | undefined = undefined;
+
 export function getGitApi(): GitApi {
+    if (_GitApi) {
+        return _GitApi;
+    }
     const gitExtension = checkNull(
         vscode.extensions.getExtension<GitExtension>('vscode.git')?.exports,
         'Git extension not found !',
@@ -13,8 +18,8 @@ export function getGitApi(): GitApi {
         vscode.window.showErrorMessage('Git extension is disabled !');
         throw new Error('Git extension is disabled !');
     }
-    const gitApi = checkNull(gitExtension.getAPI(1), 'Git API not found !');
-    return gitApi;
+    _GitApi = checkNull(gitExtension.getAPI(1), 'Git API not found !');
+    return _GitApi;
 }
 
 export async function gitExec(repoPath: string, args: string[]): Promise<string> {
@@ -25,14 +30,15 @@ export async function gitExec(repoPath: string, args: string[]): Promise<string>
     return await runCommand(gitPath, safeArgs, repoPath);
 }
 
+export function getFileGitStatus(uri: vscode.Uri) {
+    const gitApi = getGitApi();
+    const repo = checkNull(gitApi.repositories, 'Git repositories not found !')[0];
+    const file = repo.state.workingTreeChanges.find((file) => file.uri.fsPath === uri.fsPath);
+    return file?.status;
+}
+
 function quoteArgsIfNeeded(args: string[]): string[] {
-    return args.map((arg) => {
-        if (arg.includes(' ')) {
-            return `"${arg}"`;
-        } else {
-            return arg;
-        }
-    });
+    return args.map((arg) => (arg.includes(' ') ? `"${arg}"` : arg));
 }
 
 export function refreshVsCodeGit() {
