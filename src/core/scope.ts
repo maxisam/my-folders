@@ -1,13 +1,8 @@
 import * as vscode from 'vscode';
 
 import type { IConfiguration } from '../types/Configuration';
-import {
-    createExcludeList,
-    getExcludes,
-    updateConfigurationAsync,
-    updateExcludes,
-} from '../utils/configUtils';
-import { getRelativePath } from '../utils/pathUtils';
+import { getExcludes, updateConfigurationAsync, updateExcludes } from '../utils/configUtils';
+import { createExcludeList, getRelativePath } from '../utils/pathUtils';
 import { vsCodeCommands } from './commands';
 import { CONTEXT_IS_SCOPED } from './constants';
 
@@ -26,17 +21,20 @@ export async function scopeToThis(
     config: IConfiguration,
     configDirUri: vscode.Uri,
 ) {
+    if (!workspaceFolders || workspaceFolders.length === 0) {
+        return;
+    }
     try {
         const relative = getRelativePath(path, workspaceFolders);
 
-        const excludes = getExcludes(workspaceFolders);
+        const excludesConfig = getExcludes();
 
-        if (excludes && relative) {
+        if (excludesConfig && relative) {
             const paths = createExcludeList(relative);
 
-            paths.forEach((path) => (excludes[path] = true));
+            paths.forEach((path) => (excludesConfig[path] = true));
 
-            await updateExcludes(excludes, config, workspaceFolders);
+            await updateExcludes(excludesConfig, config);
 
             config.activeScope = relative;
             await updateConfigurationAsync(config, configDirUri);
@@ -50,6 +48,9 @@ export async function scopeToThis(
 }
 
 export async function clearScope(config: IConfiguration, configDirUri: vscode.Uri) {
+    if (!workspaceFolders || workspaceFolders.length === 0) {
+        return;
+    }
     try {
         const scope = config.activeScope;
         if (scope) {
@@ -63,7 +64,7 @@ export async function clearScope(config: IConfiguration, configDirUri: vscode.Ur
                     }
                 });
 
-                await updateExcludes(excludes, config, workspaceFolders);
+                await updateExcludes(excludes, config);
 
                 config.activeScope = undefined;
                 await updateConfigurationAsync(config, configDirUri);

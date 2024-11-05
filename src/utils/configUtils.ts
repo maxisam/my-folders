@@ -2,7 +2,7 @@ import { Buffer } from 'buffer';
 
 import * as vscode from 'vscode';
 
-import { CONFIG_FILE_NAME } from '../core/constants';
+import { CONFIG_FILE_NAME, DEFAULT_WS_SETTING_PATH } from '../core/constants';
 import type { ExcludeObject, IConfiguration } from '../types/Configuration';
 import { defaultConfiguration } from '../types/Configuration';
 
@@ -34,11 +34,7 @@ export async function getConfigurationAsync(configDirUri: vscode.Uri): Promise<I
     }
 }
 
-export function getExcludes(workspaceFolders?: readonly vscode.WorkspaceFolder[]) {
-    if (!workspaceFolders || workspaceFolders.length === 0) {
-        return;
-    }
-
+export function getExcludes() {
     try {
         const config = vscode.workspace.getConfiguration('files', null);
         return config.get<ExcludeObject>('exclude', {});
@@ -48,15 +44,8 @@ export function getExcludes(workspaceFolders?: readonly vscode.WorkspaceFolder[]
     }
 }
 
-export async function updateExcludes(
-    excludes: ExcludeObject,
-    config: IConfiguration,
-    workspaceFolders?: readonly vscode.WorkspaceFolder[],
-) {
-    if (!workspaceFolders || workspaceFolders.length === 0) {
-        return;
-    }
-    if (!config.privateSettingsPath || config.privateSettingsPath === '.vscode/settings.json') {
+export async function updateExcludes(excludes: ExcludeObject, config: IConfiguration) {
+    if (config.privateSettingsPath === DEFAULT_WS_SETTING_PATH) {
         try {
             const config = vscode.workspace.getConfiguration('files', null);
             const target = vscode.ConfigurationTarget.Workspace || null;

@@ -1,3 +1,4 @@
+import { DEFAULT_WS_SETTING_PATH } from '../core/constants';
 import type { ITypedDirectory } from './TypedDirectory';
 
 export interface IConfiguration {
@@ -11,13 +12,19 @@ export interface IConfiguration {
      */
     privateSettingsPath?: string | undefined;
     activeScope?: string | undefined;
+    /**
+     * List of paths to skip the git worktree
+     * https://automationpanda.com/2018/09/19/ignoring-files-with-git/
+     */
+    gitSkipWorktreeFiles: string[];
 }
 
 export const defaultConfiguration: IConfiguration = {
     bookmarkedDirectories: [],
     hideContent: false,
-    privateSettingsPath: '',
+    privateSettingsPath: DEFAULT_WS_SETTING_PATH,
     activeScope: undefined,
+    gitSkipWorktreeFiles: [],
 };
 
 export interface ExcludeObject {
