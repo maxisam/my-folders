@@ -5,6 +5,9 @@ import { getExcludes, updateConfigurationAsync, updateExcludes } from '../utils/
 import { createExcludeList, getRelativePath } from '../utils/pathUtils';
 import { vsCodeCommands } from './commands';
 import { CONTEXT_IS_SCOPED } from './constants';
+import { getFileGitStatus } from '../utils/gitUtils';
+import { skipAsync } from './skipWorktree';
+import { Status } from '../types/git.d';
 
 const workspaceFolders = vscode.workspace.workspaceFolders;
 
@@ -14,6 +17,16 @@ function setContextScope(isScoped: boolean) {
 
 export function initScope(config: IConfiguration) {
     setContextScope(!!config.scope.activeScope);
+}
+
+async function skipUserSettingsChanges(configDirUri: vscode.Uri, isSkip: boolean = true) {
+    var userSettingsPath = vscode.Uri.joinPath(configDirUri, 'settings.json');
+    var userSettingsStatus = getFileGitStatus(userSettingsPath);
+    let isUserSettingsModified =
+        userSettingsStatus === Status.MODIFIED || userSettingsStatus === Status.UNTRACKED;
+    if (!isUserSettingsModified) {
+        await skipAsync(isSkip, userSettingsPath);
+    }
 }
 
 export async function scopeToThis(
@@ -28,6 +41,7 @@ export async function scopeToThis(
         const relative = getRelativePath(path, workspaceFolders);
         const excludesConfig = getExcludes();
         if (excludesConfig && relative) {
+            await skipUserSettingsChanges(configDirUri, true);
             const paths = createExcludeList(relative);
             paths.forEach((p) => (excludesConfig[p] = true));
             config.scope.activeScope = relative;
@@ -53,6 +67,7 @@ export async function clearScope(config: IConfiguration, configDirUri: vscode.Ur
         }
         const excludesConfig = getExcludes();
         if (excludesConfig) {
+            await skipUserSettingsChanges(configDirUri, false);
             const paths = config.scope.excludePaths;
             paths.forEach((path) => {
                 if (excludesConfig.hasOwnProperty(path)) {

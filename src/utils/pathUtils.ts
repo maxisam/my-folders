@@ -2,12 +2,8 @@ import * as vscode from 'vscode';
 
 export function getRelativePath(
     path: vscode.Uri,
-    workspaceFolders?: readonly vscode.WorkspaceFolder[],
+    workspaceFolders: readonly vscode.WorkspaceFolder[],
 ) {
-    if (!workspaceFolders || workspaceFolders.length === 0) {
-        return;
-    }
-
     for (const workspace of workspaceFolders) {
         if (path.fsPath.startsWith(workspace.uri.fsPath)) {
             // use path instead of fsPath so glob patterns is consistent with slashes
@@ -20,7 +16,6 @@ export function getRelativePath(
 
 export function createExcludeList(path: string) {
     const excludes: string[] = [];
-
     const dirs = path.split('/').filter(Boolean); // Handle consecutive slashes
     dirs.forEach((dir, dirI) => {
         const dirsSoFar = dirs.slice(0, dirI).join('/') + (dirI > 0 ? '/' : '');
@@ -30,4 +25,27 @@ export function createExcludeList(path: string) {
     });
 
     return excludes;
+}
+
+export function extractFilePaths(...args: any[]): string[] {
+    const files: any[] = [];
+    // todo: remove the 2nd args is array check
+    if (args.length > 1 && Array.isArray(args[1])) {
+        files.push(...args[1]);
+    } else if (Array.isArray(args[0])) {
+        files.push(...args[0]);
+    } else {
+        files.push(args[0]);
+    }
+
+    if (files[0] instanceof vscode.Uri || (files[0] instanceof Object && files[0].fsPath)) {
+        return files.filter((f) => !!f).map((f) => f.fsPath);
+    } else if (files[0] instanceof Object && files[0].resourceUri) {
+        return files.map((f) => f.resourceUri.fsPath);
+    } else if (typeof files[0] === 'string') {
+        return files;
+    } else {
+        vscode.window.showErrorMessage(`Unknown arg type: ${typeof files[0]}`);
+        throw new Error(`Unknown arg type: ${typeof files[0]}`);
+    }
 }

@@ -1,29 +1,30 @@
 import * as vscode from 'vscode';
 import { getRelativePath } from './pathUtils';
 import { createExcludeList } from './pathUtils';
+import { extractFilePaths } from './pathUtils';
 
 describe('getRelativePath', () => {
     const workspaceFolders: vscode.WorkspaceFolder[] = [
-        { uri: vscode.Uri.file('C:\\workspace\\folder1'), name: 'folder1', index: 0 },
-        { uri: vscode.Uri.file('C:\\workspace\\folder2'), name: 'folder2', index: 1 },
+        { uri: vscode.Uri.file('c:\\workspace\\folder1'), name: 'folder1', index: 0 },
+        { uri: vscode.Uri.file('c:\\workspace\\folder2'), name: 'folder2', index: 1 },
     ];
 
     it('should return the relative path within a workspace folder', () => {
-        const path = vscode.Uri.file('C:\\workspace\\folder1\\subfolder\\file.txt');
+        const path = vscode.Uri.file('c:\\workspace\\folder1\\subfolder\\file.txt');
         const relativePath = getRelativePath(path, workspaceFolders);
 
         expect(relativePath).toBe('subfolder/file.txt');
     });
 
     it('should return undefined if path is outside all workspace folders', () => {
-        const path = vscode.Uri.file('C:\\outside\\folder\\file.txt');
+        const path = vscode.Uri.file('c:\\outside\\folder\\file.txt');
         const relativePath = getRelativePath(path, workspaceFolders);
 
         expect(relativePath).toBeUndefined();
     });
 
     it('should return undefined if no workspace folders are defined', () => {
-        const path = vscode.Uri.file('C:\\workspace\\folder1\\subfolder\\file.txt');
+        const path = vscode.Uri.file('c:\\workspace\\folder1\\subfolder\\file.txt');
         const relativePath = getRelativePath(path, []);
 
         expect(relativePath).toBeUndefined();
@@ -90,5 +91,70 @@ describe('createExcludeList', () => {
 
         const result = createExcludeList(path);
         expect(result).toEqual(expected);
+    });
+});
+
+describe('extractFilePaths Function', () => {
+    beforeEach(() => {
+        // Clear all mock instances and calls between tests
+        jest.clearAllMocks();
+    });
+
+    it('should handle a single vscode.Uri', () => {
+        const uri = vscode.Uri.file('c:\\workspace\\folder1\\subfolder\\file.txt');
+        const result = extractFilePaths(uri);
+
+        expect(result).toEqual(['c:\\workspace\\folder1\\subfolder\\file.txt']);
+    });
+
+    it('should handle an array of vscode.Uri objects', () => {
+        const uris = [
+            vscode.Uri.file('c:\\workspace\\folder1\\file1.txt'),
+            vscode.Uri.file('c:\\workspace\\folder1\\file2.txt'),
+        ];
+        const result = extractFilePaths(uris);
+
+        expect(result).toEqual([
+            'c:\\workspace\\folder1\\file1.txt',
+            'c:\\workspace\\folder1\\file2.txt',
+        ]);
+    });
+
+    it('should handle an array of objects containing resourceUri', () => {
+        const items = [
+            { resourceUri: vscode.Uri.file('c:\\workspace\\folder2\\fileA.txt') },
+            { resourceUri: vscode.Uri.file('c:\\workspace\\folder2\\fileB.txt') },
+        ];
+        const result = extractFilePaths(items);
+
+        expect(result).toEqual([
+            'c:\\workspace\\folder2\\fileA.txt',
+            'c:\\workspace\\folder2\\fileB.txt',
+        ]);
+    });
+
+    it('should handle an array of strings', () => {
+        const paths = [
+            'C:/workspace/folder1/subfolder/file1.txt',
+            'C:/workspace/folder2/subfolder/file2.txt',
+        ];
+        const result = extractFilePaths(paths);
+
+        expect(result).toEqual(paths);
+    });
+
+    it('should handle null and undefined values gracefully', () => {
+        const uris = [
+            vscode.Uri.file('c:\\workspace\\folder4\\file1.txt'),
+            null,
+            undefined,
+            vscode.Uri.file('c:\\workspace\\folder4\\file2.txt'),
+        ];
+        const result = extractFilePaths(uris);
+
+        expect(result).toEqual([
+            'c:\\workspace\\folder4\\file1.txt',
+            'c:\\workspace\\folder4\\file2.txt',
+        ]);
     });
 });

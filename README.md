@@ -7,6 +7,7 @@ Bookmark your favorite folders in the explorer view.
 - Save data to a configuration file (`.vscode/my-folders.json`)
 - Focus on the bookmarked folder
 - exclude my-folders.json locally in .git/info/exclude
+- skip settings.json changes in git when focus mode is activated
 
 ## Known Issues
 

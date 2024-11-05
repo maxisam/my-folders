@@ -1,5 +1,7 @@
 {
     "eslint.validate": ["typescript", "json", "jsonc", "markdown"],
+    "mochaExplorer.require": "ts-node/register",
+    "mochaExplorer.files": "test/**/*.ts",
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#d5fc9e",
         "activityBar.background": "#d5fc9e",
@@ -20,12 +22,5 @@
         "titleBar.inactiveForeground": "#15202b99"
     },
     "peacock.color": "#c0fb6c",
-    "files.exclude": {
-        "**/.git": true,
-        "**/.svn": true,
-        "**/.hg": true,
-        "**/CVS": true,
-        "**/.DS_Store": true,
-        "**/Thumbs.db": true
-    }
+    "cSpell.words": ["WORKTREE"]
 }
