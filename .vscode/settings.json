@@ -22,5 +22,13 @@
         "titleBar.inactiveForeground": "#15202b99"
     },
     "peacock.color": "#c0fb6c",
-    "cSpell.words": ["WORKTREE"]
+    "cSpell.words": ["WORKTREE"],
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true
+    }
 }
