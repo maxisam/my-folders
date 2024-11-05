@@ -17,3 +17,17 @@ export function getRelativePath(
     }
     return;
 }
+
+export function createExcludeList(path: string) {
+    const excludes: string[] = [];
+
+    const dirs = path.split('/').filter(Boolean); // Handle consecutive slashes
+    dirs.forEach((dir, dirI) => {
+        const dirsSoFar = dirs.slice(0, dirI).join('/') + (dirI > 0 ? '/' : '');
+        for (let i = 0; i < dir.length; i++) {
+            excludes.push(`${dirsSoFar}${dir.slice(0, i)}[!${dir[i]}]*/**`);
+        }
+    });
+
+    return excludes;
+}
