@@ -13,7 +13,7 @@ function setContextScope(isScoped: boolean) {
 }
 
 export function initScope(config: IConfiguration) {
-    setContextScope(!!config.activeScope);
+    setContextScope(!!config.scope.activeScope);
 }
 
 export async function scopeToThis(
@@ -26,18 +26,14 @@ export async function scopeToThis(
     }
     try {
         const relative = getRelativePath(path, workspaceFolders);
-
         const excludesConfig = getExcludes();
-
         if (excludesConfig && relative) {
             const paths = createExcludeList(relative);
-
-            paths.forEach((path) => (excludesConfig[path] = true));
-
-            await updateExcludes(excludesConfig, config);
-
-            config.activeScope = relative;
+            paths.forEach((p) => (excludesConfig[p] = true));
+            config.scope.activeScope = relative;
+            config.scope.excludePaths = paths;
             await updateConfigurationAsync(config, configDirUri);
+            await updateExcludes(excludesConfig, config);
             setContextScope(true);
         } else {
             vscode.window.showErrorMessage('Error in reading vscode settings.');
@@ -52,26 +48,25 @@ export async function clearScope(config: IConfiguration, configDirUri: vscode.Ur
         return;
     }
     try {
-        const scope = config.activeScope;
-        if (scope) {
-            const excludes = getExcludes();
-            if (excludes) {
-                const paths = createExcludeList(scope);
-
-                paths.forEach((path) => {
-                    if (path && excludes.hasOwnProperty(path)) {
-                        excludes[path] = undefined;
-                    }
-                });
-
-                await updateExcludes(excludes, config);
-
-                config.activeScope = undefined;
-                await updateConfigurationAsync(config, configDirUri);
-                setContextScope(false);
-            } else {
-                vscode.window.showErrorMessage('Error in reading vscode settings.');
-            }
+        if (!config.scope.activeScope) {
+            return;
+        }
+        const excludesConfig = getExcludes();
+        if (excludesConfig) {
+            const paths = config.scope.excludePaths;
+            paths.forEach((path) => {
+                if (excludesConfig.hasOwnProperty(path)) {
+                    // can't use delete or it will throw error, because of proxy object
+                    excludesConfig[path] = undefined;
+                }
+            });
+            await updateExcludes(excludesConfig, config);
+            config.scope.activeScope = undefined;
+            config.scope.excludePaths = [];
+            await updateConfigurationAsync(config, configDirUri);
+            setContextScope(false);
+        } else {
+            vscode.window.showErrorMessage('Error in reading vscode settings.');
         }
     } catch (error: any) {
         vscode.window.showErrorMessage(error.message || error);
