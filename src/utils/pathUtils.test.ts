@@ -5,26 +5,26 @@ import { extractFilePaths } from './pathUtils';
 
 describe('getRelativePath', () => {
     const workspaceFolders: vscode.WorkspaceFolder[] = [
-        { uri: vscode.Uri.file('c:\\workspace\\folder1'), name: 'folder1', index: 0 },
-        { uri: vscode.Uri.file('c:\\workspace\\folder2'), name: 'folder2', index: 1 },
+        { uri: vscode.Uri.file('c:/workspace/folder1'), name: 'folder1', index: 0 },
+        { uri: vscode.Uri.file('c:/workspace/folder2'), name: 'folder2', index: 1 },
     ];
 
     it('should return the relative path within a workspace folder', () => {
-        const path = vscode.Uri.file('c:\\workspace\\folder1\\subfolder\\file.txt');
+        const path = vscode.Uri.file('c:/workspace/folder1/subfolder/file.txt');
         const relativePath = getRelativePath(path, workspaceFolders);
 
         expect(relativePath).toBe('subfolder/file.txt');
     });
 
     it('should return undefined if path is outside all workspace folders', () => {
-        const path = vscode.Uri.file('c:\\outside\\folder\\file.txt');
+        const path = vscode.Uri.file('c:/outside/folder/file.txt');
         const relativePath = getRelativePath(path, workspaceFolders);
 
         expect(relativePath).toBeUndefined();
     });
 
     it('should return undefined if no workspace folders are defined', () => {
-        const path = vscode.Uri.file('c:\\workspace\\folder1\\subfolder\\file.txt');
+        const path = vscode.Uri.file('c:/workspace/folder1/subfolder/file.txt');
         const relativePath = getRelativePath(path, []);
 
         expect(relativePath).toBeUndefined();
@@ -101,36 +101,30 @@ describe('extractFilePaths Function', () => {
     });
 
     it('should handle a single vscode.Uri', () => {
-        const uri = vscode.Uri.file('c:\\workspace\\folder1\\subfolder\\file.txt');
+        const uri = vscode.Uri.file('c:/workspace/folder1/subfolder/file.txt');
         const result = extractFilePaths(uri);
 
-        expect(result).toEqual(['c:\\workspace\\folder1\\subfolder\\file.txt']);
+        expect(result).toEqual([uri.fsPath]);
     });
 
     it('should handle an array of vscode.Uri objects', () => {
         const uris = [
-            vscode.Uri.file('c:\\workspace\\folder1\\file1.txt'),
-            vscode.Uri.file('c:\\workspace\\folder1\\file2.txt'),
+            vscode.Uri.file('c:/workspace/folder1/file1.txt'),
+            vscode.Uri.file('c:/workspace/folder1/file2.txt'),
         ];
         const result = extractFilePaths(uris);
 
-        expect(result).toEqual([
-            'c:\\workspace\\folder1\\file1.txt',
-            'c:\\workspace\\folder1\\file2.txt',
-        ]);
+        expect(result).toEqual([uris[0].fsPath, uris[1].fsPath]);
     });
 
     it('should handle an array of objects containing resourceUri', () => {
         const items = [
-            { resourceUri: vscode.Uri.file('c:\\workspace\\folder2\\fileA.txt') },
-            { resourceUri: vscode.Uri.file('c:\\workspace\\folder2\\fileB.txt') },
+            { resourceUri: vscode.Uri.file('c:/workspace/folder2/fileA.txt') },
+            { resourceUri: vscode.Uri.file('c:/workspace/folder2/fileB.txt') },
         ];
         const result = extractFilePaths(items);
 
-        expect(result).toEqual([
-            'c:\\workspace\\folder2\\fileA.txt',
-            'c:\\workspace\\folder2\\fileB.txt',
-        ]);
+        expect(result).toEqual([items[0].resourceUri.fsPath, items[1].resourceUri.fsPath]);
     });
 
     it('should handle an array of strings', () => {
@@ -145,16 +139,13 @@ describe('extractFilePaths Function', () => {
 
     it('should handle null and undefined values gracefully', () => {
         const uris = [
-            vscode.Uri.file('c:\\workspace\\folder4\\file1.txt'),
+            vscode.Uri.file('c:/workspace/folder4/file1.txt'),
             null,
             undefined,
-            vscode.Uri.file('c:\\workspace\\folder4\\file2.txt'),
+            vscode.Uri.file('c:/workspace/folder4/file2.txt'),
         ];
         const result = extractFilePaths(uris);
 
-        expect(result).toEqual([
-            'c:\\workspace\\folder4\\file1.txt',
-            'c:\\workspace\\folder4\\file2.txt',
-        ]);
+        expect(result).toEqual([uris[0]?.fsPath, uris[3]?.fsPath]);
     });
 });
