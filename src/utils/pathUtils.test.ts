@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { getRelativePath } from './pathUtils';
 import { createExcludeList } from './pathUtils';
-import { extractFilePaths } from './pathUtils';
+import { extractFsPaths } from './pathUtils';
 
 describe('getRelativePath', () => {
     const workspaceFolders: vscode.WorkspaceFolder[] = [
@@ -102,7 +102,7 @@ describe('extractFilePaths Function', () => {
 
     it('should handle a single vscode.Uri', () => {
         const uri = vscode.Uri.file('c:/workspace/folder1/subfolder/file.txt');
-        const result = extractFilePaths(uri);
+        const result = extractFsPaths(uri);
 
         expect(result).toEqual([uri.fsPath]);
     });
@@ -112,7 +112,7 @@ describe('extractFilePaths Function', () => {
             vscode.Uri.file('c:/workspace/folder1/file1.txt'),
             vscode.Uri.file('c:/workspace/folder1/file2.txt'),
         ];
-        const result = extractFilePaths(uris);
+        const result = extractFsPaths(uris);
 
         expect(result).toEqual([uris[0].fsPath, uris[1].fsPath]);
     });
@@ -122,7 +122,7 @@ describe('extractFilePaths Function', () => {
             { resourceUri: vscode.Uri.file('c:/workspace/folder2/fileA.txt') },
             { resourceUri: vscode.Uri.file('c:/workspace/folder2/fileB.txt') },
         ];
-        const result = extractFilePaths(items);
+        const result = extractFsPaths(items);
 
         expect(result).toEqual([items[0].resourceUri.fsPath, items[1].resourceUri.fsPath]);
     });
@@ -132,7 +132,7 @@ describe('extractFilePaths Function', () => {
             'C:/workspace/folder1/subfolder/file1.txt',
             'C:/workspace/folder2/subfolder/file2.txt',
         ];
-        const result = extractFilePaths(paths);
+        const result = extractFsPaths(paths);
 
         expect(result).toEqual(paths);
     });
@@ -144,7 +144,7 @@ describe('extractFilePaths Function', () => {
             undefined,
             vscode.Uri.file('c:/workspace/folder4/file2.txt'),
         ];
-        const result = extractFilePaths(uris);
+        const result = extractFsPaths(uris);
 
         expect(result).toEqual([uris[0]?.fsPath, uris[3]?.fsPath]);
     });
