@@ -2,6 +2,7 @@ import * as path from 'path';
 
 import promiseSpawn from '@npmcli/promise-spawn';
 import * as vscode from 'vscode';
+import * as os from 'os';
 
 import { FileSystemObject } from '../types/FileSystemObject';
 import type { ITypedDirectory } from '../types/TypedDirectory';
@@ -56,4 +57,12 @@ export async function runCommand(
         );
         throw error;
     }
+}
+
+export function getPlatform(): 'win32' | 'linux' | 'darwin' {
+    const platform = os.platform();
+    if (platform.startsWith('win')) return 'win32';
+    if (platform === 'linux') return 'linux';
+    if (platform === 'darwin') return 'darwin';
+    throw new Error(`Unsupported platform: ${platform}`);
 }
