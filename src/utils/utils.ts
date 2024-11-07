@@ -55,10 +55,13 @@ export async function runCommand(
     }
 }
 
-export function getPlatform(): 'win32' | 'linux' | 'darwin' {
+export type Platform = 'win32' | 'linux' | 'darwin' | 'unsupported';
+
+export function getPlatform(): 'win32' | 'linux' | 'darwin' | 'unsupported' {
     const platform = os.platform();
+    if (!platform) return 'unsupported';
     if (platform.startsWith('win')) return 'win32';
     if (platform === 'linux') return 'linux';
     if (platform === 'darwin') return 'darwin';
-    throw new Error(`Unsupported platform: ${platform}`);
+    return 'unsupported';
 }

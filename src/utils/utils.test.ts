@@ -1,11 +1,26 @@
 import { before } from 'node:test';
 import { strictEqual, throws } from 'assert';
 
-import promiseSpawn from '@npmcli/promise-spawn';
 import sinon from 'sinon';
+import * as os from 'os';
 import * as vscode from 'vscode';
 
-import { buildTypedDirectory, checkNull, createFileSystemObject, runCommand } from './utils';
+import {
+    buildTypedDirectory,
+    checkNull,
+    createFileSystemObject,
+    getPlatform,
+    runCommand,
+} from './utils';
+
+jest.mock('os', () => {
+    // Import the original module to preserve non-mocked methods
+    const originalOs = jest.requireActual('os');
+    return {
+        ...originalOs,
+        platform: jest.fn(),
+    };
+});
 
 describe('Utils Tests', () => {
     describe('checkNull', () => {
@@ -58,6 +73,52 @@ describe('Utils Tests', () => {
         it('should return stdout on success', async () => {
             const result = await runCommand('git', ['status'], '.');
             result.startsWith('On branch');
+        });
+    });
+
+    describe('getPlatform', () => {
+        // Type assertion to inform TypeScript that os.platform is a Jest mock function
+        const mockedPlatform = os.platform as jest.MockedFunction<typeof os.platform>;
+
+        beforeEach(() => {
+            // Clear all previous mock implementations and calls
+            mockedPlatform.mockReset();
+        });
+
+        it('should return "win32" when os.platform() starts with "win"', () => {
+            const windowsPlatforms = ['win32', 'win64', 'windows'];
+
+            windowsPlatforms.forEach((winPlatform) => {
+                mockedPlatform.mockReturnValue(winPlatform as any);
+                expect(getPlatform()).toBe('win32');
+            });
+        });
+
+        it('should return "linux" when os.platform() is "linux"', () => {
+            mockedPlatform.mockReturnValue('linux');
+            expect(getPlatform()).toBe('linux');
+        });
+
+        it('should return "darwin" when os.platform() is "darwin"', () => {
+            mockedPlatform.mockReturnValue('darwin');
+            expect(getPlatform()).toBe('darwin');
+        });
+
+        it('should return "unsupported" for unknown platforms', () => {
+            const unsupportedPlatforms: Array<string | null | undefined> = [
+                'freebsd',
+                'sunos',
+                'aix',
+                'unknown',
+                '',
+                null,
+                undefined,
+            ];
+
+            unsupportedPlatforms.forEach((platform) => {
+                mockedPlatform.mockReturnValue(platform as any);
+                expect(getPlatform()).toBe('unsupported');
+            });
         });
     });
 });
