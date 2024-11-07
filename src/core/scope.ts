@@ -19,13 +19,18 @@ export function initScope(config: IConfiguration) {
     setContextScope(!!config.scope.activeScope);
 }
 
-async function skipUserSettingsChanges(configDirUri: vscode.Uri, isSkip: boolean = true) {
+async function skipUserSettingsChanges(
+    configDirUri: vscode.Uri,
+    config: IConfiguration,
+    isSkip: boolean = true,
+) {
     var userSettingsPath = vscode.Uri.joinPath(configDirUri, 'settings.json');
     var userSettingsStatus = getFileGitStatus(userSettingsPath);
     let isUserSettingsModified =
         userSettingsStatus === Status.MODIFIED || userSettingsStatus === Status.UNTRACKED;
+    // if the user settings file is modified or untracked, then we can't use git skip worktree
     if (!isUserSettingsModified) {
-        await skipAsync(isSkip, userSettingsPath);
+        await skipAsync(isSkip, [userSettingsPath], config);
     }
 }
 
@@ -41,7 +46,7 @@ export async function scopeToThis(
         const relative = getRelativePath(path, workspaceFolders);
         const excludesConfig = getExcludes();
         if (excludesConfig && relative) {
-            await skipUserSettingsChanges(configDirUri, true);
+            await skipUserSettingsChanges(configDirUri, config, true);
             const paths = createExcludeList(relative);
             paths.forEach((p) => (excludesConfig[p] = true));
             config.scope.activeScope = relative;
@@ -67,7 +72,7 @@ export async function clearScope(config: IConfiguration, configDirUri: vscode.Ur
         }
         const excludesConfig = getExcludes();
         if (excludesConfig) {
-            await skipUserSettingsChanges(configDirUri, false);
+            await skipUserSettingsChanges(configDirUri, config, false);
             const paths = config.scope.excludePaths;
             paths.forEach((path) => {
                 if (excludesConfig.hasOwnProperty(path)) {
