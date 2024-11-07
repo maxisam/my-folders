@@ -1,10 +1,10 @@
 import { Buffer } from 'buffer';
-
 import * as vscode from 'vscode';
 
 import { CONFIG_FILE_NAME, DEFAULT_WS_SETTING_PATH } from '../core/constants';
 import type { ExcludeObject, IConfiguration } from '../types/Configuration';
 import { defaultConfiguration } from '../types/Configuration';
+import { mergeConfig } from './mergeUtils';
 
 const myFileConfigs = new Map<string, IConfiguration>();
 export async function updateConfigurationAsync(config: IConfiguration, configDirUri: vscode.Uri) {
@@ -28,10 +28,10 @@ export async function getConfigurationAsync(
     configDirUri: vscode.Uri,
     isNoCache = false,
 ): Promise<IConfiguration> {
-    if (myFileConfigs.has(configDirUri.path) && !isNoCache) {
-        return myFileConfigs.get(configDirUri.path)!;
-    }
     const configPath = vscode.Uri.joinPath(configDirUri, CONFIG_FILE_NAME);
+    if (myFileConfigs.has(configPath.path) && !isNoCache) {
+        return myFileConfigs.get(configPath.path)!;
+    }
     try {
         const configData = await vscode.workspace.fs.readFile(configPath);
         const origConfig: IConfiguration = JSON.parse(configData.toString());
@@ -40,9 +40,14 @@ export async function getConfigurationAsync(
             ? origConfig.privateSettingsPath
             : DEFAULT_WS_SETTING_PATH;
         const newconfig = { ...defaultConfiguration, ...origConfig };
-        // cache the config
-        myFileConfigs.set(configPath.path, newconfig);
-        return newconfig;
+        if (myFileConfigs.has(configDirUri.path)) {
+            const mergedConfig = mergeConfig(myFileConfigs.get(configDirUri.path)!, newconfig);
+            myFileConfigs.set(configPath.path, mergedConfig);
+            return mergedConfig;
+        } else {
+            myFileConfigs.set(configPath.path, newconfig);
+            return newconfig;
+        }
     } catch {
         return defaultConfiguration;
     }
