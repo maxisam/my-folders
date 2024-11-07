@@ -3,16 +3,16 @@ import * as vscode from 'vscode';
 import type { IConfiguration } from '../types/Configuration';
 import { getExcludes, updateConfigurationAsync, updateExcludes } from '../utils/configUtils';
 import { createExcludeList, getRelativePath } from '../utils/pathUtils';
-import { vsCodeCommands } from './commands';
 import { CONTEXT_IS_SCOPED } from './constants';
 import { getFileGitStatus } from '../utils/gitUtils';
 import { skipAsync } from './skipWorktree';
 import { Status } from '../types/git.d';
+import { vscodeCommands } from '../utils/vscodeCommands';
 
 const workspaceFolders = vscode.workspace.workspaceFolders;
 
 function setContextScope(isScoped: boolean) {
-    vscode.commands.executeCommand(vsCodeCommands.SetContext, CONTEXT_IS_SCOPED, isScoped);
+    vscode.commands.executeCommand(vscodeCommands.SetContext, CONTEXT_IS_SCOPED, isScoped);
 }
 
 export function initScope(config: IConfiguration) {

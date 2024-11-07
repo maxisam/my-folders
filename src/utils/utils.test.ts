@@ -5,13 +5,7 @@ import promiseSpawn from '@npmcli/promise-spawn';
 import sinon from 'sinon';
 import * as vscode from 'vscode';
 
-import {
-    buildTypedDirectory,
-    checkNull,
-    createFileSystemObject,
-    focusFileExplorer,
-    runCommand,
-} from './utils';
+import { buildTypedDirectory, checkNull, createFileSystemObject, runCommand } from './utils';
 
 describe('Utils Tests', () => {
     describe('checkNull', () => {
@@ -47,16 +41,6 @@ describe('Utils Tests', () => {
             const uri = vscode.Uri.file('/path/to/file');
             const result = createFileSystemObject('folder', vscode.FileType.File, uri, true);
             strictEqual(result.resourceUri.path, '/path/to/file');
-        });
-    });
-
-    describe('focusFileExplorer', () => {
-        it('should execute revealInExplorer command', () => {
-            const uri = vscode.Uri.file('/path/to/file');
-            const executeCommandStub = sinon.stub(vscode.commands, 'executeCommand');
-            focusFileExplorer(uri);
-            strictEqual(executeCommandStub.calledWith('revealInExplorer', uri), true);
-            executeCommandStub.restore();
         });
     });
 

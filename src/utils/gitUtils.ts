@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 
-import { vsCodeCommands } from '../core/commands';
 import type { API as GitApi, GitExtension } from '../types/git';
 import { checkNull, runCommand } from './utils';
+import { vscodeCommands } from './vscodeCommands';
 
 let _GitApi: GitApi | undefined = undefined;
 
@@ -42,5 +42,5 @@ function quoteArgsIfNeeded(args: string[]): string[] {
 }
 
 export function refreshVsCodeGit() {
-    vscode.commands.executeCommand(vsCodeCommands.GitRefresh);
+    vscode.commands.executeCommand(vscodeCommands.GitRefresh);
 }

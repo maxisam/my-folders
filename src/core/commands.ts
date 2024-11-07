@@ -5,12 +5,7 @@ import type { IConfiguration } from '../types/Configuration';
 import type { FileSystemObject } from '../types/FileSystemObject';
 import { EXTENSION_NAME } from './constants';
 import { clearScope, scopeToThis } from './scope';
-
-export enum vsCodeCommands {
-    Open = 'vscode.open',
-    SetContext = 'setContext',
-    GitRefresh = 'git.refresh',
-}
+import { vscodeCommands } from '../utils/vscodeCommands';
 
 export enum ExtensionCommands {
     SelectItem = `${EXTENSION_NAME}.selectItem`,
@@ -52,7 +47,7 @@ function registerRefreshEntryCommand(directoryProvider: DirectoryProvider) {
 function registerOpenItemCommand() {
     return vscode.commands.registerCommand(ExtensionCommands.OpenItem, (file) => {
         vscode.commands.executeCommand(
-            vsCodeCommands.Open,
+            vscodeCommands.Open,
             vscode.Uri.parse(file.resourceUri.path),
         );
     });

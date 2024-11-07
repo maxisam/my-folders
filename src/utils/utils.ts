@@ -39,10 +39,6 @@ export function createFileSystemObject(
     return fObj;
 }
 
-export function focusFileExplorer(uri: vscode.Uri) {
-    vscode.commands.executeCommand('revealInExplorer', uri);
-}
-
 export async function runCommand(
     cmdPath: string,
     safeArgs: string[],

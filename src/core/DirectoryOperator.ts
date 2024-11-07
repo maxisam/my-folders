@@ -4,7 +4,8 @@ import type { IConfiguration } from '../types/Configuration';
 import type { FileSystemObject } from '../types/FileSystemObject';
 import type { ITypedDirectory } from '../types/TypedDirectory';
 import { getConfigurationAsync, updateConfigurationAsync } from '../utils/configUtils';
-import { buildTypedDirectory, createFileSystemObject, focusFileExplorer } from '../utils/utils';
+import { buildTypedDirectory, createFileSystemObject } from '../utils/utils';
+import { focusFileExplorer } from '../utils/vscodeCommands';
 
 export class DirectoryOperator {
     private bookmarkedDirectories: ITypedDirectory[] = [];
