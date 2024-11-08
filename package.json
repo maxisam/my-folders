@@ -1,7 +1,7 @@
 {
     "name": "my-folders",
     "displayName": "my-folders",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "my-folders",
     "publisher": "maxisam",
     "private": true,
@@ -20,8 +20,22 @@
         "url": "https://github.com/maxisam/my-folders/issues"
     },
     "keywords": [
-        "boilerplate",
-        "template"
+        "bookmark",
+        "directories",
+        "explorer",
+        "file",
+        "focus",
+        "folder",
+        "folders",
+        "hidden",
+        "hide",
+        "ignore",
+        "manager",
+        "monorepo",
+        "mono-repo",
+        "scope",
+        "show",
+        "workspace"
     ],
     "categories": [
         "Other"
@@ -33,7 +47,7 @@
     "icon": "assets/logo.png",
     "packageManager": "pnpm@9.9.0",
     "engines": {
-        "vscode": "^1.95.0"
+        "vscode": "^1.90.0"
     },
     "badges": [
         {
