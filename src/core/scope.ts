@@ -26,10 +26,12 @@ async function skipUserSettingsChanges(
 ) {
     var userSettingsPath = vscode.Uri.joinPath(configDirUri, 'settings.json');
     var userSettingsStatus = getFileGitStatus(userSettingsPath);
-    let isUserSettingsModified =
-        userSettingsStatus === Status.MODIFIED || userSettingsStatus === Status.UNTRACKED;
+    let isUnskipable =
+        userSettingsStatus === Status.MODIFIED ||
+        userSettingsStatus === Status.UNTRACKED ||
+        userSettingsStatus === undefined;
     // if the user settings file is modified or untracked, then we can't use git skip worktree
-    if (!isUserSettingsModified) {
+    if (!isUnskipable) {
         await skipAsync(isSkip, [userSettingsPath], config);
     }
 }
