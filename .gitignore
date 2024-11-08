@@ -8,3 +8,4 @@ meta.json
 stats.html
 
 coverage/
+test-workspace/.vscode/settings.json
